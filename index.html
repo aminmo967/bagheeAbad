@@ -63,10 +63,6 @@ body {
     transform:scale(0.95);
 }
 
-/* ================================================= */
-/* منوی اصلی */
-/* ================================================= */
-
 .group-menu {
     display:none;
     width:180px;
@@ -81,10 +77,6 @@ body {
 .group-menu.open {
     display:block;
 }
-
-/* ================================================= */
-/* دکمه‌های اصلی */
-/* ================================================= */
 
 .category-button {
     width:100% !important;
@@ -104,10 +96,6 @@ body {
 .category-button:active {
     background:#eee !important;
 }
-
-/* ================================================= */
-/* زیرمنو */
-/* ================================================= */
 
 .group-submenu {
     display:none;
@@ -135,10 +123,6 @@ body {
 .group-submenu button:active {
     background:#ddd;
 }
-
-/* ================================================= */
-/* ورودی فایل */
-/* ================================================= */
 
 .kmz-file-input {
     display:none;
@@ -201,10 +185,6 @@ body {
     text-align:center;
 }
 
-/* ================================================= */
-/* اطلاعات مسیر روی خود خط */
-/* ================================================= */
-
 .route-info-label {
     background:transparent !important;
     border:0 !important;
@@ -224,6 +204,51 @@ body {
     line-height:18px;
     box-shadow:0 2px 6px rgba(0,0,0,0.30);
     direction:rtl;
+}
+
+/* ================================================= */
+/* Popup انتخاب مسیر */
+/* ================================================= */
+
+.routing-popup {
+    direction:rtl;
+    text-align:center;
+    font-family:Arial,sans-serif;
+    min-width:190px;
+}
+
+.routing-popup-title {
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.routing-popup-buttons {
+    display:flex;
+    gap:7px;
+    justify-content:center;
+}
+
+.routing-popup-button {
+    border:0;
+    border-radius:7px;
+    padding:9px 12px;
+    font-size:13px;
+    cursor:pointer;
+    font-weight:bold;
+    min-width:75px;
+}
+
+.routing-popup-button:active {
+    transform:scale(0.96);
+}
+
+.routing-car {
+    background:#e8f0fe;
+}
+
+.routing-foot {
+    background:#e8f5e9;
 }
 
 /* ================================================= */
@@ -270,7 +295,7 @@ body {
 }
 
 /* ================================================= */
-/* کادر مختصات پایین سمت راست */
+/* کادر مختصات */
 /* ================================================= */
 
 .coordinate-info {
@@ -278,31 +303,18 @@ body {
     right:8px;
     bottom:8px;
     z-index:1000;
-
     min-width:165px;
-
     background:rgba(255,255,255,0.72);
-
     border:1px solid rgba(120,120,120,0.45);
-
     border-radius:8px;
-
     padding:6px 9px;
-
     box-shadow:0 1px 5px rgba(0,0,0,0.20);
-
     direction:ltr;
-
     text-align:left;
-
     font-family:Arial,sans-serif;
-
     font-size:12px;
-
     line-height:18px;
-
     pointer-events:none;
-
     backdrop-filter:blur(2px);
 }
 
@@ -318,17 +330,9 @@ body {
     font-family:monospace;
 }
 
-/* ================================================= */
-/* کنترل اندازه‌گیری */
-/* ================================================= */
-
 .leaflet-control-measure {
     display:block !important;
 }
-
-/* ================================================= */
-/* کنترل‌های قدیمی */
-/* ================================================= */
 
 .leaflet-draw {
     display:none !important;
@@ -336,6 +340,10 @@ body {
 
 .leaflet-control-layers {
     display:none !important;
+}
+
+.leaflet-control {
+    touch-action:manipulation;
 }
 
 /* ================================================= */
@@ -402,10 +410,12 @@ body {
         line-height:16px;
         padding:4px 7px;
     }
-}
 
-.leaflet-control {
-    touch-action:manipulation;
+    .routing-popup-button {
+        min-width:70px;
+        padding:9px 8px;
+        font-size:12px;
+    }
 }
 
 </style>
@@ -418,17 +428,9 @@ body {
 
 <div id="map"></div>
 
-<!-- ================================================= -->
-<!-- اطلاعات مسیر -->
-<!-- ================================================= -->
-
 <div id="liveRouteInfo"
      class="live-route-info">
 </div>
-
-<!-- ================================================= -->
-<!-- مختصات UTM و ارتفاع -->
-<!-- ================================================= -->
 
 <div id="coordinateInfo"
      class="coordinate-info">
@@ -460,10 +462,6 @@ body {
 
 </div>
 
-<!-- ================================================= -->
-<!-- کتابخانه‌ها -->
-<!-- ================================================= -->
-
 <script src="js/qgis2web_expressions.js"></script>
 <script src="js/leaflet.js"></script>
 <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -476,23 +474,11 @@ body {
 <script src="js/labels.js"></script>
 <script src="js/leaflet-measure.js"></script>
 
-<!-- ================================================= -->
-<!-- KMZ -->
-<!-- ================================================= -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script src="https://unpkg.com/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
 
-<!-- ================================================= -->
-<!-- Leaflet Draw -->
-<!-- ================================================= -->
-
 <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
-
-<!-- ================================================= -->
-<!-- داده‌های QGIS -->
-<!-- ================================================= -->
 
 <script src="data/Lmt1400_3637_1.js"></script>
 <script src="data/TXT1400_3637_2.js"></script>
@@ -500,7 +486,7 @@ body {
 <script>
 
 /* ================================================= */
-/* ایجاد نقشه */
+/* نقشه */
 /* ================================================= */
 
 var map = L.map('map', {
@@ -510,10 +496,6 @@ var map = L.map('map', {
 });
 
 var hash = new L.Hash(map);
-
-/* ================================================= */
-/* زوم */
-/* ================================================= */
 
 L.control.zoom({
     position:'topleft'
@@ -544,7 +526,7 @@ var autolinker = new Autolinker({
 });
 
 /* ================================================= */
-/* حذف ردیف‌های خالی Popup */
+/* Popup */
 /* ================================================= */
 
 function removeEmptyRowsFromPopupContent(content,feature){
@@ -572,9 +554,11 @@ function removeEmptyRowsFromPopupContent(content,feature){
             rows[i].parentNode.removeChild(rows[i]);
 
         }
+
     }
 
     return tempDiv.innerHTML;
+
 }
 
 /* ================================================= */
@@ -621,6 +605,18 @@ function pop_Lmt1400_3637_1(feature,layer){
             maxHeight:400
         }
     );
+
+    /* جلوگیری از تبدیل کلیک روی عارضه به مقصد مسیر */
+
+    layer.on(
+        'click',
+        function(e){
+
+            L.DomEvent.stopPropagation(e);
+
+        }
+    );
+
 }
 
 function style_Lmt1400_3637_1_0(){
@@ -631,6 +627,7 @@ function style_Lmt1400_3637_1_0(){
         fillOpacity:0,
         interactive:true
     };
+
 }
 
 var layer_Lmt1400_3637_1 = new L.geoJson(
@@ -686,6 +683,18 @@ function pop_TXT1400_3637_2(feature,layer){
             maxHeight:400
         }
     );
+
+    /* جلوگیری از تبدیل کلیک روی عارضه به مقصد مسیر */
+
+    layer.on(
+        'click',
+        function(e){
+
+            L.DomEvent.stopPropagation(e);
+
+        }
+    );
+
 }
 
 function style_TXT1400_3637_2_0(){
@@ -699,6 +708,7 @@ function style_TXT1400_3637_2_0(){
         fillColor:'rgba(231,113,72,1.0)',
         interactive:true
     };
+
 }
 
 var layer_TXT1400_3637_2 = new L.geoJson(
@@ -715,6 +725,7 @@ var layer_TXT1400_3637_2 = new L.geoJson(
             );
 
         }
+
     }
 ).addTo(map);
 
@@ -765,6 +776,7 @@ function setBounds(){
         );
 
     }
+
 }
 
 setBounds();
@@ -866,6 +878,15 @@ var kmzLayer = L.geoJSON(
 
             }
 
+            layer.on(
+                'click',
+                function(e){
+
+                    L.DomEvent.stopPropagation(e);
+
+                }
+            );
+
         }
 
     }
@@ -925,7 +946,7 @@ var drawControl = new L.Control.Draw({
 });
 
 /* ================================================= */
-/* ایجاد عارضه رسم‌شده */
+/* ایجاد عارضه */
 /* ================================================= */
 
 map.on(
@@ -1034,8 +1055,7 @@ function geoJSONToKML(geojson){
 
             geometry.coordinates.forEach(function(c){
 
-                kml +=
-                    c[0]+','+c[1]+',0 ';
+                kml += c[0]+','+c[1]+',0 ';
 
             });
 
@@ -1056,8 +1076,7 @@ function geoJSONToKML(geojson){
 
                 line.forEach(function(c){
 
-                    kml +=
-                        c[0]+','+c[1]+',0 ';
+                    kml += c[0]+','+c[1]+',0 ';
 
                 });
 
@@ -1091,8 +1110,7 @@ function geoJSONToKML(geojson){
 
                     ring.forEach(function(c){
 
-                        kml +=
-                            c[0]+','+c[1]+',0 ';
+                        kml += c[0]+','+c[1]+',0 ';
 
                     });
 
@@ -1111,8 +1129,7 @@ function geoJSONToKML(geojson){
                 }
             );
 
-            kml +=
-                '</Polygon>';
+            kml += '</Polygon>';
 
         }
 
@@ -1139,8 +1156,7 @@ function geoJSONToKML(geojson){
 
                     ring.forEach(function(c){
 
-                        kml +=
-                            c[0]+','+c[1]+',0 ';
+                        kml += c[0]+','+c[1]+',0 ';
 
                     });
 
@@ -1158,15 +1174,13 @@ function geoJSONToKML(geojson){
 
                 });
 
-                kml +=
-                    '</Polygon>';
+                kml += '</Polygon>';
 
             });
 
         }
 
-        kml +=
-            '</Placemark>';
+        kml += '</Placemark>';
 
     });
 
@@ -1175,6 +1189,7 @@ function geoJSONToKML(geojson){
         '</kml>';
 
     return kml;
+
 }
 
 /* ================================================= */
@@ -1353,7 +1368,7 @@ function parseKML(kmlText,fileName){
 }
 
 /* ================================================= */
-/* جمع‌آوری خروجی */
+/* خروجی */
 /* ================================================= */
 
 function collectExportGeoJSON(){
@@ -1403,10 +1418,6 @@ function collectExportGeoJSON(){
     };
 
 }
-
-/* ================================================= */
-/* خروجی KMZ */
-/* ================================================= */
 
 function exportKMZ(){
 
@@ -1465,10 +1476,6 @@ function exportKMZ(){
 
 }
 
-/* ================================================= */
-/* پاک کردن */
-/* ================================================= */
-
 function clearKMZ(){
 
     kmzLayer.clearLayers();
@@ -1482,17 +1489,13 @@ function clearDrawnFeatures(){
 }
 
 /* ================================================= */
-/* متغیرهای GPS */
+/* GPS */
 /* ================================================= */
 
 var userMarker=null;
 var accuracyCircle=null;
 var watchID=null;
 var lastPosition=null;
-
-/* ================================================= */
-/* متغیرهای ارتفاع */
-/* ================================================= */
 
 var lastElevationRequest=0;
 var currentElevation=null;
@@ -1509,15 +1512,10 @@ var liveRouteActive=false;
 var lastRoutePosition=null;
 var isRoutingRequestRunning=false;
 var lastRouteRequestTime=0;
-
-/* ================================================= */
-/* اطلاعات روی خط مسیر */
-/* ================================================= */
-
 var routeInfoMarker=null;
 
 /* ================================================= */
-/* تبدیل Lat/Lon به UTM - WGS84 */
+/* UTM */
 /* ================================================= */
 
 function latLonToUTM(lat,lon){
@@ -1532,15 +1530,10 @@ function latLonToUTM(lat,lon){
     var N,T,C,A,M;
 
     var LatRad=lat*Math.PI/180.0;
-
     var LongRad=lon*Math.PI/180.0;
 
     var ZoneNumber=
         Math.floor((lon+180)/6)+1;
-
-    /*
-       اصلاح مخصوص نروژ
-    */
 
     if(
         lat>=56.0 &&
@@ -1552,10 +1545,6 @@ function latLonToUTM(lat,lon){
         ZoneNumber=32;
 
     }
-
-    /*
-       اصلاح مخصوص Svalbard
-    */
 
     if(
         lat>=72.0 &&
@@ -1713,7 +1702,7 @@ function latLonToUTM(lat,lon){
 }
 
 /* ================================================= */
-/* نمایش مختصات UTM */
+/* مختصات */
 /* ================================================= */
 
 function updateCoordinateInfo(lat,lon,elevation){
@@ -1763,7 +1752,7 @@ function updateCoordinateInfo(lat,lon,elevation){
 }
 
 /* ================================================= */
-/* ارتفاع از سرویس ارتفاعی */
+/* ارتفاع */
 /* ================================================= */
 
 function getElevationFromService(lat,lon){
@@ -1872,6 +1861,7 @@ function calculateBearing(
         180/Math.PI;
 
     return (bearing+360)%360;
+
 }
 
 /* ================================================= */
@@ -2123,11 +2113,9 @@ function updateCompassButton(){
         return;
     }
 
-    button.innerHTML=
-        '🧭';
+    button.innerHTML='🧭';
 
-    button.title=
-        'جهت جغرافیایی';
+    button.title='جهت جغرافیایی';
 
     button.setAttribute(
         'data-heading',
@@ -2135,10 +2123,6 @@ function updateCompassButton(){
     );
 
 }
-
-/* ================================================= */
-/* شروع قطب‌نما */
-/* ================================================= */
 
 function startCompass(){
 
@@ -2200,10 +2184,6 @@ function startCompass(){
 
 }
 
-/* ================================================= */
-/* دریافت جهت دستگاه */
-/* ================================================= */
-
 function handleOrientation(event){
 
     var heading=null;
@@ -2245,10 +2225,52 @@ function handleOrientation(event){
 }
 
 /* ================================================= */
-/* مسیریابی */
+/* پاک کردن مسیر قبلی */
 /* ================================================= */
 
-function startLiveRouting(mode){
+function clearCurrentRoute(){
+
+    if(liveRouteLayer){
+
+        map.removeLayer(
+            liveRouteLayer
+        );
+
+        liveRouteLayer=null;
+
+    }
+
+    if(liveDestinationMarker){
+
+        map.removeLayer(
+            liveDestinationMarker
+        );
+
+        liveDestinationMarker=null;
+
+    }
+
+    if(routeInfoMarker){
+
+        map.removeLayer(
+            routeInfoMarker
+        );
+
+        routeInfoMarker=null;
+
+    }
+
+    document.getElementById(
+        'liveRouteInfo'
+    ).style.display='none';
+
+}
+
+/* ================================================= */
+/* انتخاب حالت مسیریابی */
+/* ================================================= */
+
+function selectRoutingMode(mode){
 
     if(!map._userLocation){
 
@@ -2257,52 +2279,146 @@ function startLiveRouting(mode){
         );
 
         return;
+
+    }
+
+    if(!liveDestination){
+
+        return;
+
     }
 
     liveRoutingMode=mode;
 
-    alert(
-        'مقصد را روی نقشه انتخاب کنید.'
-    );
+    liveRouteActive=true;
 
-    map.once(
-        'click',
-        function(e){
+    lastRoutePosition=null;
 
-            liveDestination=e.latlng;
+    isRoutingRequestRunning=false;
 
-            liveRouteActive=true;
+    lastRouteRequestTime=0;
 
-            lastRoutePosition=null;
+    if(map.closePopup){
 
-            if(liveDestinationMarker){
+        map.closePopup();
 
-                map.removeLayer(
-                    liveDestinationMarker
-                );
+    }
 
-            }
+    if(liveDestinationMarker){
 
-            liveDestinationMarker=L.marker(
-                liveDestination
-            ).addTo(map);
+        liveDestinationMarker.bindPopup(
+            '<div class="routing-popup">' +
 
-            liveDestinationMarker.bindPopup(
+            '<div class="routing-popup-title">' +
+            '🏁 مقصد انتخاب شده' +
+            '</div>' +
 
-                mode==='driving'
-                ?
-                '🏁 مقصد خودرو'
-                :
-                '🏁 مقصد پیاده'
+            '<div class="routing-popup-buttons">' +
 
-            );
+            '<button ' +
+            'class="routing-popup-button routing-car" ' +
+            'onclick="selectRoutingMode(\'driving\')">' +
+            '🚗 خودرو' +
+            '</button>' +
 
-            calculateLiveRoute(true);
+            '<button ' +
+            'class="routing-popup-button routing-foot" ' +
+            'onclick="selectRoutingMode(\'foot\')">' +
+            '🚶 پیاده' +
+            '</button>' +
 
-        }
-    );
+            '</div>' +
+
+            '</div>'
+        );
+
+    }
+
+    calculateLiveRoute(true);
 
 }
+
+/* ================================================= */
+/* انتخاب مقصد با لمس نقشه */
+/* ================================================= */
+
+map.on(
+    'click',
+    function(e){
+
+        /* اگر GPS هنوز آماده نیست */
+
+        if(!map._userLocation){
+
+            alert(
+                'هنوز موقعیت GPS دریافت نشده است.'
+            );
+
+            return;
+
+        }
+
+        /* مقصد جدید */
+
+        liveDestination=e.latlng;
+
+        /* اگر مسیر قبلی وجود دارد، پاک شود */
+
+        liveRouteActive=false;
+
+        liveRoutingMode=null;
+
+        lastRoutePosition=null;
+
+        isRoutingRequestRunning=false;
+
+        clearCurrentRoute();
+
+        /* مقصد جدید */
+
+        liveDestinationMarker=L.marker(
+            liveDestination
+        ).addTo(map);
+
+        /* Popup مقصد */
+
+        liveDestinationMarker.bindPopup(
+
+            '<div class="routing-popup">' +
+
+            '<div class="routing-popup-title">' +
+            '🏁 انتخاب نوع مسیر' +
+            '</div>' +
+
+            '<div class="routing-popup-buttons">' +
+
+            '<button ' +
+            'class="routing-popup-button routing-car" ' +
+            'onclick="selectRoutingMode(\'driving\')">' +
+            '🚗 خودرو' +
+            '</button>' +
+
+            '<button ' +
+            'class="routing-popup-button routing-foot" ' +
+            'onclick="selectRoutingMode(\'foot\')">' +
+            '🚶 پیاده' +
+            '</button>' +
+
+            '</div>' +
+
+            '</div>',
+
+            {
+                closeButton:true,
+                autoClose:true
+            }
+
+        );
+
+        liveDestinationMarker.openPopup();
+
+    }
+);
 
 /* ================================================= */
 /* محاسبه مسیر */
@@ -2403,14 +2519,14 @@ function calculateLiveRoute(firstRoute){
             data.routes.length===0
         ){
 
+            alert(
+                'برای این مقصد مسیر پیدا نشد.'
+            );
+
             return;
         }
 
         var route=data.routes[0];
-
-        /* ========================================= */
-        /* حذف مسیر قبلی */
-        /* ========================================= */
 
         if(liveRouteLayer){
 
@@ -2422,10 +2538,6 @@ function calculateLiveRoute(firstRoute){
 
         }
 
-        /* ========================================= */
-        /* حذف اطلاعات قبلی روی مسیر */
-        /* ========================================= */
-
         if(routeInfoMarker){
 
             map.removeLayer(
@@ -2435,10 +2547,6 @@ function calculateLiveRoute(firstRoute){
             routeInfoMarker=null;
 
         }
-
-        /* ========================================= */
-        /* رسم مسیر جدید */
-        /* ========================================= */
 
         liveRouteLayer=L.geoJSON(
             route.geometry,
@@ -2455,10 +2563,6 @@ function calculateLiveRoute(firstRoute){
             start.lng
         );
 
-        /* ========================================= */
-        /* مسافت و زمان */
-        /* ========================================= */
-
         var distance=route.distance/1000;
 
         var duration=Math.round(
@@ -2471,10 +2575,6 @@ function calculateLiveRoute(firstRoute){
             '🚗 خودرو'
             :
             '🚶 پیاده';
-
-        /* ========================================= */
-        /* اطلاعات پایین صفحه */
-        /* ========================================= */
 
         document.getElementById(
             'liveRouteInfo'
@@ -2493,10 +2593,6 @@ function calculateLiveRoute(firstRoute){
         document.getElementById(
             'liveRouteInfo'
         ).style.display='block';
-
-        /* ========================================= */
-        /* اطلاعات روی خود خط مسیر */
-        /* ========================================= */
 
         var coordinates=
             route.geometry.coordinates;
@@ -2560,19 +2656,13 @@ function calculateLiveRoute(firstRoute){
 
                 {
                     icon:routeInfoIcon,
-
                     interactive:false,
-
                     zIndexOffset:1000
                 }
 
             ).addTo(map);
 
         }
-
-        /* ========================================= */
-        /* نمایش کل مسیر در اولین محاسبه */
-        /* ========================================= */
 
         if(firstRoute){
 
@@ -2594,6 +2684,11 @@ function calculateLiveRoute(firstRoute){
         console.log(
             'Live routing error:',
             error
+        );
+
+        alert(
+            'خطا در دریافت مسیر.\n' +
+            'لطفاً دوباره امتحان کنید.'
         );
 
     });
@@ -2650,48 +2745,14 @@ function stopLiveRoute(){
 
     lastRoutePosition=null;
 
-    if(liveRouteLayer){
+    isRoutingRequestRunning=false;
 
-        map.removeLayer(
-            liveRouteLayer
-        );
-
-        liveRouteLayer=null;
-
-    }
-
-    if(liveDestinationMarker){
-
-        map.removeLayer(
-            liveDestinationMarker
-        );
-
-        liveDestinationMarker=null;
-
-    }
-
-    /* ========================================= */
-    /* حذف اطلاعات روی خط */
-    /* ========================================= */
-
-    if(routeInfoMarker){
-
-        map.removeLayer(
-            routeInfoMarker
-        );
-
-        routeInfoMarker=null;
-
-    }
-
-    document.getElementById(
-        'liveRouteInfo'
-    ).style.display='none';
+    clearCurrentRoute();
 
 }
 
 /* ================================================= */
-/* رسم نقطه */
+/* رسم */
 /* ================================================= */
 
 function startDrawMarker(){
@@ -2703,10 +2764,6 @@ function startDrawMarker(){
 
 }
 
-/* ================================================= */
-/* رسم خط */
-/* ================================================= */
-
 function startDrawPolyline(){
 
     new L.Draw.Polyline(
@@ -2716,10 +2773,6 @@ function startDrawPolyline(){
 
 }
 
-/* ================================================= */
-/* رسم پلیگون */
-/* ================================================= */
-
 function startDrawPolygon(){
 
     new L.Draw.Polygon(
@@ -2728,10 +2781,6 @@ function startDrawPolygon(){
     ).enable();
 
 }
-
-/* ================================================= */
-/* ویرایش */
-/* ================================================= */
 
 function editDrawnFeatures(){
 
@@ -2752,10 +2801,6 @@ function editDrawnFeatures(){
     ).enable();
 
 }
-
-/* ================================================= */
-/* حذف انتخابی */
-/* ================================================= */
 
 function deleteDrawnFeatures(){
 
@@ -2794,10 +2839,6 @@ mapSideControl.onAdd=function(){
 
     div.innerHTML=
 
-        /*
-           جهت جغرافیایی
-        */
-
         '<button '+
         'id="compassButton" '+
         'class="map-side-button" '+
@@ -2805,20 +2846,12 @@ mapSideControl.onAdd=function(){
         '🧭'+
         '</button>'+
 
-        /*
-           موقعیت من
-        */
-
         '<button '+
         'id="myLocationSideButton" '+
         'class="map-side-button" '+
         'title="موقعیت من">'+
         '🎯'+
         '</button>'+
-
-        /*
-           اندازه‌گیری
-        */
 
         '<button '+
         'id="measureSideButton" '+
@@ -2836,7 +2869,7 @@ mapSideControl.onAdd=function(){
 mapSideControl.addTo(map);
 
 /* ================================================= */
-/* قطب‌نما */
+/* دکمه‌های سمت راست */
 /* ================================================= */
 
 document.getElementById(
@@ -2847,10 +2880,6 @@ document.getElementById(
 
 };
 
-/* ================================================= */
-/* موقعیت من - دکمه مستقل سمت راست */
-/* ================================================= */
-
 document.getElementById(
     'myLocationSideButton'
 ).onclick=function(){
@@ -2858,10 +2887,6 @@ document.getElementById(
     goToMyLocation();
 
 };
-
-/* ================================================= */
-/* اندازه‌گیری سمت راست */
-/* ================================================= */
 
 document.getElementById(
     'measureSideButton'
@@ -2916,13 +2941,9 @@ groupControl.onAdd=function(){
         'id="locationSubmenu" '+
         'class="group-submenu">'+
 
-        '<button id="liveCarButton2">'+
-        '🚗 مسیر خودرو'+
-        '</button>'+
-
-        '<button id="liveFootButton2">'+
-        '🚶 مسیر پیاده'+
-        '</button>'+
+        /*
+           فقط پایان مسیر باقی مانده
+        */
 
         '<button id="stopLiveRouteButton2">'+
         '⛔ پایان مسیر'+
@@ -3014,10 +3035,6 @@ function closeSubmenus(){
 
 }
 
-/* ================================================= */
-/* منوی اصلی */
-/* ================================================= */
-
 document.getElementById(
     'groupMainButton'
 ).onclick=function(){
@@ -3029,10 +3046,6 @@ document.getElementById(
     menu.classList.toggle('open');
 
 };
-
-/* ================================================= */
-/* دسته موقعیت و نقشه */
-/* ================================================= */
 
 document.getElementById(
     'locationCategoryButton'
@@ -3056,10 +3069,6 @@ document.getElementById(
 
 };
 
-/* ================================================= */
-/* دسته ابزارها */
-/* ================================================= */
-
 document.getElementById(
     'toolsCategoryButton'
 ).onclick=function(){
@@ -3079,34 +3088,6 @@ document.getElementById(
         submenu.classList.add('open');
 
     }
-
-};
-
-/* ================================================= */
-/* خودرو */
-/* ================================================= */
-
-document.getElementById(
-    'liveCarButton2'
-).onclick=function(){
-
-    startLiveRouting(
-        'driving'
-    );
-
-};
-
-/* ================================================= */
-/* پیاده */
-/* ================================================= */
-
-document.getElementById(
-    'liveFootButton2'
-).onclick=function(){
-
-    startLiveRouting(
-        'foot'
-    );
 
 };
 
@@ -3155,10 +3136,6 @@ document.getElementById(
     ).click();
 
 };
-
-/* ================================================= */
-/* فایل KMZ */
-/* ================================================= */
 
 document.getElementById(
     'kmzFileInput'
