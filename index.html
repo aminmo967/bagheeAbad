@@ -21,6 +21,10 @@
 <link rel="stylesheet" href="css/leaflet.photon.css">
 <link rel="stylesheet" href="css/leaflet-measure.css">
 
+<!-- Leaflet Draw -->
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css">
+
 <style>
 
 /* ================================================= */
@@ -86,6 +90,59 @@ body {
 .mobile-button:active {
 
     transform:scale(0.95);
+
+}
+
+
+/* ================================================= */
+/* کنترل KMZ */
+/* ================================================= */
+
+.kmz-control {
+
+    margin-left:8px !important;
+    margin-top:5px !important;
+
+}
+
+
+.kmz-button {
+
+    width:46px;
+    height:46px;
+
+    border:1px solid #999;
+
+    border-radius:8px;
+
+    background:white;
+
+    font-size:20px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 2px 5px rgba(0,0,0,0.25);
+
+}
+
+
+.kmz-button:active {
+
+    transform:scale(0.95);
+
+}
+
+
+.kmz-file-input {
+
+    display:none;
 
 }
 
@@ -204,12 +261,13 @@ body {
 
 @media(max-width:600px){
 
-    .mobile-button {
+    .mobile-button,
+    .kmz-button {
 
         width:44px;
         height:44px;
 
-        font-size:20px;
+        font-size:19px;
 
     }
 
@@ -228,6 +286,51 @@ body {
         max-width:85%;
 
     }
+
+    .leaflet-draw {
+
+        margin-top:5px !important;
+
+    }
+
+}
+
+
+/* ================================================= */
+/* عنوان دکمه‌های رسم */
+/* ================================================= */
+
+.leaflet-draw-toolbar a {
+
+    background-color:white;
+
+}
+
+
+/* ================================================= */
+/* پنجره اطلاعات KMZ */
+/* ================================================= */
+
+.kmz-info {
+
+    direction:rtl;
+
+    text-align:right;
+
+    font-family:Arial;
+
+    font-size:14px;
+
+}
+
+
+/* ================================================= */
+/* کنترل رسم در سمت چپ */
+/* ================================================= */
+
+.leaflet-draw {
+
+    margin-left:8px !important;
 
 }
 
@@ -250,7 +353,7 @@ body {
 
 
 <!-- ================================================= -->
-<!-- کتابخانه‌ها -->
+<!-- کتابخانه‌های اصلی -->
 <!-- ================================================= -->
 
 <script src="js/qgis2web_expressions.js"></script>
@@ -283,6 +386,22 @@ body {
 
 
 <!-- ================================================= -->
+<!-- کتابخانه KMZ -->
+<!-- ================================================= -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script src="https://unpkg.com/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
+
+
+<!-- ================================================= -->
+<!-- Leaflet Draw -->
+<!-- ================================================= -->
+
+<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+
+
+<!-- ================================================= -->
 <!-- داده‌های QGIS -->
 <!-- ================================================= -->
 
@@ -292,6 +411,7 @@ body {
 
 
 <script>
+
 
 /* ================================================= */
 /* ایجاد نقشه */
@@ -408,9 +528,7 @@ function removeEmptyRowsFromPopupContent(
 
         ){
 
-            rows[i]
-                .parentNode
-                .removeChild(rows[i]);
+            rows[i].parentNode.removeChild(rows[i]);
 
         }
 
@@ -438,17 +556,13 @@ function pop_Lmt1400_3637_1(
 
         (
             feature.properties['F_Class'] !== null
-
             ?
-
             autolinker.link(
                 String(
                     feature.properties['F_Class']
                 )
             )
-
             :
-
             ''
         )
 
@@ -460,17 +574,13 @@ function pop_Lmt1400_3637_1(
 
         (
             feature.properties['L_Type'] !== null
-
             ?
-
             autolinker.link(
                 String(
                     feature.properties['L_Type']
                 )
             )
-
             :
-
             ''
         )
 
@@ -558,17 +668,13 @@ function pop_TXT1400_3637_2(
 
         (
             feature.properties['Name'] !== null
-
             ?
-
             autolinker.link(
                 String(
                     feature.properties['Name']
                 )
             )
-
             :
-
             ''
         )
 
@@ -580,17 +686,13 @@ function pop_TXT1400_3637_2(
 
         (
             feature.properties['Name_Class'] !== null
-
             ?
-
             autolinker.link(
                 String(
                     feature.properties['Name_Class']
                 )
             )
-
             :
-
             ''
         )
 
@@ -831,6 +933,1474 @@ map.addControl(
 
 
 /* ================================================= */
+/* لایه عوارض KMZ */
+/* ================================================= */
+
+var kmzLayer =
+
+    L.geoJSON(
+
+        null,
+
+        {
+
+            style:function(feature){
+
+                return {
+
+                    color:'#ff0000',
+
+                    weight:3,
+
+                    fillColor:'#ffff00',
+
+                    fillOpacity:0.25
+
+                };
+
+            },
+
+            pointToLayer:function(
+                feature,
+                latlng
+            ){
+
+                return L.circleMarker(
+
+                    latlng,
+
+                    {
+
+                        radius:7,
+
+                        color:'#ff0000',
+
+                        weight:2,
+
+                        fillColor:'#ffff00',
+
+                        fillOpacity:0.8
+
+                    }
+
+                );
+
+            },
+
+            onEachFeature:function(
+                feature,
+                layer
+            ){
+
+                var name =
+                    '';
+
+                if(
+                    feature.properties
+                    &&
+                    feature.properties.name
+                ){
+
+                    name =
+                        feature.properties.name;
+
+                }
+
+                if(name){
+
+                    layer.bindPopup(
+
+                        '<div class="kmz-info">' +
+
+                        '<b>نام:</b> ' +
+
+                        name +
+
+                        '</div>'
+
+                    );
+
+                }
+
+            }
+
+        }
+
+    ).addTo(map);
+
+
+/* ================================================= */
+/* لایه عوارض رسم‌شده */
+/* ================================================= */
+
+var drawnItems =
+
+    new L.FeatureGroup();
+
+
+map.addLayer(
+    drawnItems
+);
+
+
+/* ================================================= */
+/* ابزار رسم */
+/* ================================================= */
+
+var drawControl =
+
+    new L.Control.Draw({
+
+        position:'topleft',
+
+        draw:{
+
+            polyline:{
+
+                shapeOptions:{
+
+                    color:'#0066ff',
+
+                    weight:4
+
+                }
+
+            },
+
+            polygon:{
+
+                allowIntersection:false,
+
+                showArea:true,
+
+                shapeOptions:{
+
+                    color:'#008000',
+
+                    weight:3,
+
+                    fillOpacity:0.25
+
+                }
+
+            },
+
+            rectangle:false,
+
+            circle:false,
+
+            circlemarker:false,
+
+            marker:{
+
+                icon:
+                    new L.Icon.Default()
+
+            }
+
+        },
+
+        edit:{
+
+            featureGroup:
+                drawnItems,
+
+            remove:true
+
+        }
+
+    });
+
+
+map.addControl(
+    drawControl
+);
+
+
+/* ================================================= */
+/* وقتی عارضه رسم شد */
+/* ================================================= */
+
+map.on(
+
+    L.Draw.Event.CREATED,
+
+    function(event){
+
+        var layer =
+            event.layer;
+
+        drawnItems.addLayer(
+            layer
+        );
+
+        layer.bindPopup(
+
+            '<div class="kmz-info">' +
+
+            '<b>عارضه رسم‌شده</b><br>' +
+
+            'برای خروجی KMZ از دکمه 📤 استفاده کنید.'
+
+            +
+
+            '</div>'
+
+        );
+
+    }
+
+);
+
+
+/* ================================================= */
+/* تبدیل مختصات GeoJSON به KML */
+/* ================================================= */
+
+function escapeXml(value){
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            '&amp;'
+        )
+
+        .replace(
+            /</g,
+            '&lt;'
+        )
+
+        .replace(
+            />/g,
+            '&gt;'
+        )
+
+        .replace(
+            /"/g,
+            '&quot;'
+        )
+
+        .replace(
+            /'/g,
+            '&apos;'
+        );
+
+}
+
+
+/* ================================================= */
+/* ساخت KML از GeoJSON */
+/* ================================================= */
+
+function geoJSONToKML(
+    geojson
+){
+
+    var kml =
+
+        '<?xml version="1.0" encoding="UTF-8"?>' +
+
+        '<kml xmlns="http://www.opengis.net/kml/2.2">' +
+
+        '<Document>';
+
+
+    kml +=
+
+        '<name>QGIS Web Map Export</name>';
+
+
+    var features =
+        geojson.features || [];
+
+
+    features.forEach(
+
+        function(feature){
+
+            if(
+                !feature.geometry
+            ){
+
+                return;
+
+            }
+
+
+            var props =
+                feature.properties || {};
+
+
+            var name =
+                props.name ||
+                props.Name ||
+                props.NAME ||
+                'عارضه';
+
+
+            kml +=
+
+                '<Placemark>' +
+
+                '<name>' +
+
+                escapeXml(name) +
+
+                '</name>';
+
+
+            var geometry =
+                feature.geometry;
+
+
+            /* ===================================== */
+            /* Point */
+            /* ===================================== */
+
+            if(
+                geometry.type ===
+                'Point'
+            ){
+
+                var c =
+                    geometry.coordinates;
+
+
+                kml +=
+
+                    '<Point>' +
+
+                    '<coordinates>' +
+
+                    c[0] +
+
+                    ',' +
+
+                    c[1] +
+
+                    ',0' +
+
+                    '</coordinates>' +
+
+                    '</Point>';
+
+            }
+
+
+            /* ===================================== */
+            /* MultiPoint */
+            /* ===================================== */
+
+            else if(
+
+                geometry.type ===
+                'MultiPoint'
+
+            ){
+
+                geometry.coordinates.forEach(
+
+                    function(c){
+
+                        kml +=
+
+                            '<Point>' +
+
+                            '<coordinates>' +
+
+                            c[0] +
+
+                            ',' +
+
+                            c[1] +
+
+                            ',0' +
+
+                            '</coordinates>' +
+
+                            '</Point>';
+
+                    }
+
+                );
+
+            }
+
+
+            /* ===================================== */
+            /* LineString */
+            /* ===================================== */
+
+            else if(
+
+                geometry.type ===
+                'LineString'
+
+            ){
+
+                kml +=
+
+                    '<LineString>' +
+
+                    '<tessellate>1</tessellate>' +
+
+                    '<coordinates>';
+
+
+                geometry.coordinates.forEach(
+
+                    function(c){
+
+                        kml +=
+
+                            c[0] +
+
+                            ',' +
+
+                            c[1] +
+
+                            ',0 ';
+
+                    }
+
+                );
+
+
+                kml +=
+
+                    '</coordinates>' +
+
+                    '</LineString>';
+
+            }
+
+
+            /* ===================================== */
+            /* MultiLineString */
+            /* ===================================== */
+
+            else if(
+
+                geometry.type ===
+                'MultiLineString'
+
+            ){
+
+                geometry.coordinates.forEach(
+
+                    function(line){
+
+                        kml +=
+
+                            '<LineString>' +
+
+                            '<tessellate>1</tessellate>' +
+
+                            '<coordinates>';
+
+
+                        line.forEach(
+
+                            function(c){
+
+                                kml +=
+
+                                    c[0] +
+
+                                    ',' +
+
+                                    c[1] +
+
+                                    ',0 ';
+
+                            }
+
+                        );
+
+
+                        kml +=
+
+                            '</coordinates>' +
+
+                            '</LineString>';
+
+                    }
+
+                );
+
+            }
+
+
+            /* ===================================== */
+            /* Polygon */
+            /* ===================================== */
+
+            else if(
+
+                geometry.type ===
+                'Polygon'
+
+            ){
+
+                kml +=
+
+                    '<Polygon>' +
+
+                    '<tessellate>1</tessellate>';
+
+
+                geometry.coordinates.forEach(
+
+                    function(ring,index){
+
+                        if(index === 0){
+
+                            kml +=
+
+                                '<outerBoundaryIs>';
+
+                        }
+
+                        else{
+
+                            kml +=
+
+                                '<innerBoundaryIs>';
+
+                        }
+
+
+                        kml +=
+
+                            '<LinearRing>' +
+
+                            '<coordinates>';
+
+
+                        ring.forEach(
+
+                            function(c){
+
+                                kml +=
+
+                                    c[0] +
+
+                                    ',' +
+
+                                    c[1] +
+
+                                    ',0 ';
+
+                            }
+
+                        );
+
+
+                        kml +=
+
+                            '</coordinates>' +
+
+                            '</LinearRing>';
+
+
+                        if(index === 0){
+
+                            kml +=
+
+                                '</outerBoundaryIs>';
+
+                        }
+
+                        else{
+
+                            kml +=
+
+                                '</innerBoundaryIs>';
+
+                        }
+
+                    }
+
+                );
+
+
+                kml +=
+
+                    '</Polygon>';
+
+            }
+
+
+            /* ===================================== */
+            /* MultiPolygon */
+            /* ===================================== */
+
+            else if(
+
+                geometry.type ===
+                'MultiPolygon'
+
+            ){
+
+                geometry.coordinates.forEach(
+
+                    function(polygon){
+
+                        kml +=
+
+                            '<MultiGeometry>';
+
+
+                        polygon.forEach(
+
+                            function(ring,index){
+
+                                kml +=
+
+                                    '<Polygon>' +
+
+                                    '<tessellate>1</tessellate>';
+
+
+                                if(index === 0){
+
+                                    kml +=
+
+                                        '<outerBoundaryIs>';
+
+                                }
+
+                                else{
+
+                                    kml +=
+
+                                        '<innerBoundaryIs>';
+
+                                }
+
+
+                                kml +=
+
+                                    '<LinearRing>' +
+
+                                    '<coordinates>';
+
+
+                                ring.forEach(
+
+                                    function(c){
+
+                                        kml +=
+
+                                            c[0] +
+
+                                            ',' +
+
+                                            c[1] +
+
+                                            ',0 ';
+
+                                    }
+
+                                );
+
+
+                                kml +=
+
+                                    '</coordinates>' +
+
+                                    '</LinearRing>';
+
+
+                                if(index === 0){
+
+                                    kml +=
+
+                                        '</outerBoundaryIs>';
+
+                                }
+
+                                else{
+
+                                    kml +=
+
+                                        '</innerBoundaryIs>';
+
+                                }
+
+
+                                kml +=
+
+                                    '</Polygon>';
+
+                            }
+
+                        );
+
+
+                        kml +=
+
+                            '</MultiGeometry>';
+
+                    }
+
+                );
+
+            }
+
+
+            kml +=
+
+                '</Placemark>';
+
+        }
+
+    );
+
+
+    kml +=
+
+        '</Document>' +
+
+        '</kml>';
+
+
+    return kml;
+
+}
+
+
+/* ================================================= */
+/* دریافت فایل KMZ */
+/* ================================================= */
+
+function importKMZFile(
+    file
+){
+
+    if(!file){
+
+        return;
+
+    }
+
+
+    var fileName =
+        file.name.toLowerCase();
+
+
+    if(
+        !fileName.endsWith('.kmz')
+        &&
+        !fileName.endsWith('.kml')
+    ){
+
+        alert(
+            'لطفاً فایل KMZ یا KML انتخاب کنید.'
+        );
+
+        return;
+
+    }
+
+
+    var reader =
+        new FileReader();
+
+
+    reader.onload =
+        function(e){
+
+            var arrayBuffer =
+                e.target.result;
+
+
+            if(
+                fileName.endsWith('.kmz')
+            ){
+
+                JSZip.loadAsync(
+                    arrayBuffer
+                )
+
+                .then(
+
+                    function(zip){
+
+                        var kmlFile =
+                            null;
+
+
+                        Object.keys(
+                            zip.files
+                        ).forEach(
+
+                            function(path){
+
+                                if(
+
+                                    !zip.files[path].dir
+                                    &&
+                                    path.toLowerCase()
+                                    .endsWith('.kml')
+                                    &&
+                                    !kmlFile
+
+                                ){
+
+                                    kmlFile =
+                                        zip.files[path];
+
+                                }
+
+                            }
+
+                        );
+
+
+                        if(!kmlFile){
+
+                            throw new Error(
+                                'فایل KML داخل KMZ پیدا نشد.'
+                            );
+
+                        }
+
+
+                        return kmlFile.async(
+                            'text'
+                        );
+
+                    }
+
+                )
+
+                .then(
+
+                    function(kmlText){
+
+                        parseKML(
+                            kmlText,
+                            file.name
+                        );
+
+                    }
+
+                )
+
+                .catch(
+
+                    function(error){
+
+                        console.error(error);
+
+                        alert(
+                            'خطا در خواندن فایل KMZ.'
+                        );
+
+                    }
+
+                );
+
+            }
+
+            else{
+
+                var decoder =
+                    new TextDecoder(
+                        'utf-8'
+                    );
+
+
+                var kmlText =
+                    decoder.decode(
+                        new Uint8Array(
+                            arrayBuffer
+                        )
+                    );
+
+
+                parseKML(
+                    kmlText,
+                    file.name
+                );
+
+            }
+
+        };
+
+
+    reader.readAsArrayBuffer(
+        file
+    );
+
+}
+
+
+/* ================================================= */
+/* تبدیل KML به GeoJSON */
+/* ================================================= */
+
+function parseKML(
+    kmlText,
+    fileName
+){
+
+    try{
+
+        var parser =
+            new DOMParser();
+
+
+        var kml =
+            parser.parseFromString(
+                kmlText,
+                'text/xml'
+            );
+
+
+        var geojson =
+            toGeoJSON.kml(
+                kml
+            );
+
+
+        if(
+            !geojson ||
+            !geojson.features ||
+            geojson.features.length === 0
+        ){
+
+            alert(
+                'در فایل KMZ عارضه قابل نمایش پیدا نشد.'
+            );
+
+            return;
+
+        }
+
+
+        kmzLayer.clearLayers();
+
+
+        kmzLayer.addData(
+            geojson
+        );
+
+
+        var bounds =
+            kmzLayer.getBounds();
+
+
+        if(
+            bounds.isValid()
+        ){
+
+            map.fitBounds(
+                bounds,
+                {
+
+                    padding:[
+                        40,
+                        40
+                    ]
+
+                }
+            );
+
+        }
+
+
+        alert(
+
+            'فایل ' +
+
+            fileName +
+
+            ' با موفقیت وارد شد.\n' +
+
+            'تعداد عوارض: ' +
+
+            geojson.features.length
+
+        );
+
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            'خطا در تبدیل KML به نقشه.'
+        );
+
+    }
+
+}
+
+
+/* ================================================= */
+/* دریافت GeoJSON از لایه KMZ و لایه رسم‌شده */
+/* ================================================= */
+
+function collectExportGeoJSON(){
+
+    var features = [];
+
+
+    /* ============================================= */
+    /* عوارض KMZ */
+    /* ============================================= */
+
+    kmzLayer.eachLayer(
+
+        function(layer){
+
+            if(
+                layer.feature
+            ){
+
+                features.push(
+                    layer.feature
+                );
+
+            }
+
+        }
+
+    );
+
+
+    /* ============================================= */
+    /* عوارض رسم‌شده */
+    /* ============================================= */
+
+    drawnItems.eachLayer(
+
+        function(layer){
+
+            var feature =
+                layer.toGeoJSON();
+
+
+            if(
+                feature
+            ){
+
+                if(
+                    !feature.properties
+                ){
+
+                    feature.properties = {};
+
+                }
+
+
+                if(
+                    !feature.properties.name
+                ){
+
+                    feature.properties.name =
+                        'عارضه رسم‌شده';
+
+                }
+
+
+                features.push(
+                    feature
+                );
+
+            }
+
+        }
+
+    );
+
+
+    return {
+
+        type:
+            'FeatureCollection',
+
+        features:
+            features
+
+    };
+
+}
+
+
+/* ================================================= */
+/* خروجی KMZ */
+/* ================================================= */
+
+function exportKMZ(){
+
+    var geojson =
+        collectExportGeoJSON();
+
+
+    if(
+        geojson.features.length === 0
+    ){
+
+        alert(
+            'هیچ عارضه‌ای برای خروجی وجود ندارد.'
+        );
+
+        return;
+
+    }
+
+
+    var kml =
+        geoJSONToKML(
+            geojson
+        );
+
+
+    var zip =
+        new JSZip();
+
+
+    zip.file(
+        'doc.kml',
+        kml
+    );
+
+
+    zip.generateAsync(
+
+        {
+
+            type:'blob',
+
+            mimeType:
+                'application/vnd.google-earth.kmz'
+
+        }
+
+    )
+
+    .then(
+
+        function(blob){
+
+            var url =
+                URL.createObjectURL(
+                    blob
+                );
+
+
+            var a =
+                document.createElement(
+                    'a'
+                );
+
+
+            a.href =
+                url;
+
+
+            a.download =
+                'QGIS_Web_Map.kmz';
+
+
+            document.body.appendChild(
+                a
+            );
+
+
+            a.click();
+
+
+            document.body.removeChild(
+                a
+            );
+
+
+            setTimeout(
+
+                function(){
+
+                    URL.revokeObjectURL(
+                        url
+                    );
+
+                },
+
+                1000
+
+            );
+
+        }
+
+    )
+
+    .catch(
+
+        function(error){
+
+            console.error(error);
+
+            alert(
+                'خطا در ایجاد فایل KMZ.'
+            );
+
+        }
+
+    );
+
+}
+
+
+/* ================================================= */
+/* پاک کردن KMZ */
+/* ================================================= */
+
+function clearKMZ(){
+
+    kmzLayer.clearLayers();
+
+}
+
+
+/* ================================================= */
+/* پاک کردن عوارض رسم‌شده */
+/* ================================================= */
+
+function clearDrawnFeatures(){
+
+    drawnItems.clearLayers();
+
+}
+
+
+/* ================================================= */
+/* کنترل KMZ */
+/* ================================================= */
+
+var kmzControl =
+
+    L.control({
+
+        position:'topleft'
+
+    });
+
+
+kmzControl.onAdd =
+
+function(){
+
+    var div =
+
+        L.DomUtil.create(
+
+            'div',
+
+            'leaflet-control kmz-control'
+
+        );
+
+
+    div.innerHTML =
+
+        '<button ' +
+
+        'id="importKMZButton" ' +
+
+        'class="kmz-button" ' +
+
+        'title="ورود KMZ">' +
+
+        '📂' +
+
+        '</button>' +
+
+        '<br>' +
+
+        '<button ' +
+
+        'id="exportKMZButton" ' +
+
+        'class="kmz-button" ' +
+
+        'title="خروجی KMZ">' +
+
+        '📤' +
+
+        '</button>' +
+
+        '<br>' +
+
+        '<button ' +
+
+        'id="clearKMZButton" ' +
+
+        'class="kmz-button" ' +
+
+        'title="پاک کردن KMZ">' +
+
+        '🗑️' +
+
+        '</button>' +
+
+        '<br>' +
+
+        '<button ' +
+
+        'id="clearDrawButton" ' +
+
+        'class="kmz-button" ' +
+
+        'title="پاک کردن عوارض رسم شده">' +
+
+        '✖️' +
+
+        '</button>' +
+
+        '<input ' +
+
+        'type="file" ' +
+
+        'id="kmzFileInput" ' +
+
+        'class="kmz-file-input" ' +
+
+        'accept=".kmz,.kml" ' +
+
+        '>';
+
+    
+    L.DomEvent.disableClickPropagation(
+        div
+    );
+
+
+    return div;
+
+};
+
+
+kmzControl.addTo(map);
+
+
+/* ================================================= */
+/* دکمه ورود KMZ */
+/* ================================================= */
+
+document
+.getElementById(
+    'importKMZButton'
+)
+.onclick = function(){
+
+    document
+    .getElementById(
+        'kmzFileInput'
+    )
+    .click();
+
+};
+
+
+/* ================================================= */
+/* انتخاب فایل */
+/* ================================================= */
+
+document
+.getElementById(
+    'kmzFileInput'
+)
+.addEventListener(
+
+    'change',
+
+    function(e){
+
+        var file =
+            e.target.files[0];
+
+
+        importKMZFile(
+            file
+        );
+
+
+        e.target.value =
+            '';
+
+    }
+
+);
+
+
+/* ================================================= */
+/* دکمه خروجی KMZ */
+/* ================================================= */
+
+document
+.getElementById(
+    'exportKMZButton'
+)
+.onclick = function(){
+
+    exportKMZ();
+
+};
+
+
+/* ================================================= */
+/* دکمه پاک کردن KMZ */
+/* ================================================= */
+
+document
+.getElementById(
+    'clearKMZButton'
+)
+.onclick = function(){
+
+    if(
+        confirm(
+            'عوارض واردشده از KMZ پاک شوند؟'
+        )
+    ){
+
+        clearKMZ();
+
+    }
+
+};
+
+
+/* ================================================= */
+/* دکمه پاک کردن عوارض رسم‌شده */
+/* ================================================= */
+
+document
+.getElementById(
+    'clearDrawButton'
+)
+.onclick = function(){
+
+    if(
+        confirm(
+            'تمام عوارض رسم‌شده پاک شوند؟'
+        )
+    ){
+
+        clearDrawnFeatures();
+
+    }
+
+};
+
+
+/* ================================================= */
 /* متغیرهای موقعیت زنده */
 /* ================================================= */
 
@@ -868,7 +2438,9 @@ var lastRouteRequestTime = 0;
 /* ساخت آیکون کاربر */
 /* ================================================= */
 
-function createUserIcon(heading){
+function createUserIcon(
+    heading
+){
 
     var html =
 
@@ -1025,10 +2597,6 @@ function startLiveLocation(){
                     position.coords.heading;
 
 
-                /* ================================= */
-                /* محاسبه جهت در صورت نبود heading */
-                /* ================================= */
-
                 if(
 
                     (
@@ -1070,10 +2638,6 @@ function startLiveLocation(){
 
                 }
 
-
-                /* ================================= */
-                /* نشانگر کاربر */
-                /* ================================= */
 
                 if(userMarker){
 
@@ -1123,10 +2687,6 @@ function startLiveLocation(){
                 }
 
 
-                /* ================================= */
-                /* دقت GPS */
-                /* ================================= */
-
                 if(accuracyCircle){
 
                     accuracyCircle.setLatLng(
@@ -1164,10 +2724,6 @@ function startLiveLocation(){
                 }
 
 
-                /* ================================= */
-                /* ذخیره موقعیت */
-                /* ================================= */
-
                 map._userLocation =
 
                     L.latLng(
@@ -1176,15 +2732,7 @@ function startLiveLocation(){
                     );
 
 
-                /* ================================= */
-                /* بررسی مسیریابی زنده */
-                /* ================================= */
-
-                if(
-
-                    liveRouteActive
-
-                ){
+                if(liveRouteActive){
 
                     updateLiveNavigation();
 
@@ -1273,7 +2821,9 @@ function(){
         '</button>';
 
 
-    L.DomEvent.disableClickPropagation(div);
+    L.DomEvent.disableClickPropagation(
+        div
+    );
 
 
     return div;
@@ -1387,7 +2937,9 @@ function(){
         '</button>';
 
 
-    L.DomEvent.disableClickPropagation(div);
+    L.DomEvent.disableClickPropagation(
+        div
+    );
 
 
     return div;
@@ -1402,7 +2954,9 @@ liveRoutingControl.addTo(map);
 /* شروع مسیریابی زنده */
 /* ================================================= */
 
-function startLiveRouting(mode){
+function startLiveRouting(
+    mode
+){
 
     if(!map._userLocation){
 
@@ -1443,10 +2997,6 @@ function startLiveRouting(mode){
             lastRoutePosition = null;
 
 
-            /* =============================== */
-            /* مقصد */
-            /* =============================== */
-
             if(liveDestinationMarker){
 
                 map.removeLayer(
@@ -1480,10 +3030,6 @@ function startLiveRouting(mode){
             );
 
 
-            /* =============================== */
-            /* محاسبه مسیر اولیه */
-            /* =============================== */
-
             calculateLiveRoute(true);
 
         }
@@ -1497,7 +3043,9 @@ function startLiveRouting(mode){
 /* محاسبه مسیر زنده */
 /* ================================================= */
 
-function calculateLiveRoute(firstRoute){
+function calculateLiveRoute(
+    firstRoute
+){
 
     if(!liveRouteActive){
 
@@ -1526,11 +3074,6 @@ function calculateLiveRoute(firstRoute){
 
     }
 
-
-    /*
-       جلوگیری از ارسال درخواست زیاد
-       به سرور مسیریابی
-    */
 
     var now =
         Date.now();
@@ -1566,11 +3109,9 @@ function calculateLiveRoute(firstRoute){
     var server;
 
 
-    if(
-        liveRoutingMode === 'driving'
-    ){
+    if(liveRoutingMode === 'driving'){
 
-        profile='driving';
+        profile = 'driving';
 
         server =
             'https://routing.openstreetmap.de/routed-car';
@@ -1579,7 +3120,7 @@ function calculateLiveRoute(firstRoute){
 
     else{
 
-        profile='foot';
+        profile = 'foot';
 
         server =
             'https://routing.openstreetmap.de/routed-foot';
@@ -1666,10 +3207,6 @@ function calculateLiveRoute(firstRoute){
                 data.routes[0];
 
 
-            /* =============================== */
-            /* حذف مسیر قبلی */
-            /* =============================== */
-
             if(liveRouteLayer){
 
                 map.removeLayer(
@@ -1678,10 +3215,6 @@ function calculateLiveRoute(firstRoute){
 
             }
 
-
-            /* =============================== */
-            /* رسم مسیر جدید */
-            /* =============================== */
 
             liveRouteLayer =
 
@@ -1704,10 +3237,6 @@ function calculateLiveRoute(firstRoute){
                 ).addTo(map);
 
 
-            /* =============================== */
-            /* ذخیره موقعیت */
-            /* =============================== */
-
             lastRoutePosition =
 
                 L.latLng(
@@ -1718,10 +3247,6 @@ function calculateLiveRoute(firstRoute){
 
                 );
 
-
-            /* =============================== */
-            /* اطلاعات مسیر */
-            /* =============================== */
 
             var distance =
 
@@ -1783,10 +3308,6 @@ function calculateLiveRoute(firstRoute){
             .style.display =
                 'block';
 
-
-            /* =============================== */
-            /* فقط در شروع مسیر روی کل مسیر زوم */
-            /* =============================== */
 
             if(firstRoute){
 
@@ -1873,10 +3394,6 @@ function updateLiveNavigation(){
 
         );
 
-
-    /*
-       هر 30 متر مسیر بررسی می‌شود.
-    */
 
     if(
 
@@ -1973,6 +3490,7 @@ document
     .style.display='none';
 
 };
+
 
 </script>
 
