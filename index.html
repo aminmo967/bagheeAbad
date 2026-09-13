@@ -17,7 +17,6 @@
 <link rel="stylesheet" href="css/fontawesome-all.min.css">
 <link rel="stylesheet" href="css/leaflet-measure.css">
 
-<!-- Leaflet Draw -->
 <link rel="stylesheet"
       href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css">
 
@@ -73,6 +72,7 @@ body {
 /* ================================================= */
 /* منوی اصلی */
 /* ================================================= */
+
 .group-menu {
     display:none;
     width:180px;
@@ -83,7 +83,6 @@ body {
     box-shadow:0 2px 8px rgba(0,0,0,0.3);
     box-sizing:border-box;
 }
-
 
 .group-menu.open {
     display:block;
@@ -203,7 +202,7 @@ body {
     bottom:20px;
     transform:translateX(-50%);
     z-index:1000;
-    background:white;
+    background:rgba(255,255,255,0.90);
     border-radius:10px;
     padding:10px 15px;
     box-shadow:0 2px 8px rgba(0,0,0,0.3);
@@ -227,14 +226,107 @@ body {
 
 
 /* ================================================= */
-/* کنترل‌های قدیمی مخفی */
+/* دکمه‌های سمت راست */
+/* ================================================= */
+
+.map-side-control {
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin-top:5px;
+    margin-right:5px;
+}
+
+.map-side-button {
+    width:44px;
+    height:44px;
+    border:1px solid #999;
+    border-radius:9px;
+    background:rgba(255,255,255,0.94);
+    font-size:21px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    box-shadow:0 2px 5px rgba(0,0,0,0.25);
+    padding:0;
+}
+
+.map-side-button:active {
+    transform:scale(0.94);
+    background:#eee;
+}
+
+
+/* ================================================= */
+/* کادر مختصات پایین سمت راست */
+/* ================================================= */
+
+.coordinate-info {
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    z-index:1000;
+
+    min-width:165px;
+
+    background:rgba(255,255,255,0.72);
+
+    border:1px solid rgba(120,120,120,0.45);
+
+    border-radius:8px;
+
+    padding:6px 9px;
+
+    box-shadow:0 1px 5px rgba(0,0,0,0.20);
+
+    direction:ltr;
+
+    text-align:left;
+
+    font-family:Arial,sans-serif;
+
+    font-size:12px;
+
+    line-height:18px;
+
+    pointer-events:none;
+
+    backdrop-filter:blur(2px);
+}
+
+.coordinate-row {
+    white-space:nowrap;
+}
+
+.coordinate-label {
+    font-weight:bold;
+}
+
+.coordinate-value {
+    font-family:monospace;
+}
+
+
+/* ================================================= */
+/* کنترل اندازه‌گیری */
+/* ================================================= */
+
+/*
+   قبلاً این قسمت display:none بود و باعث می‌شد
+   ابزار اندازه‌گیری عملاً کار نکند.
+*/
+
+.leaflet-control-measure {
+    display:block !important;
+}
+
+
+/* ================================================= */
+/* کنترل‌های قدیمی */
 /* ================================================= */
 
 .leaflet-draw {
-    display:none !important;
-}
-
-.leaflet-control-measure {
     display:none !important;
 }
 
@@ -261,11 +353,12 @@ body {
     }
 
     .group-menu {
+        width:180px;
         max-width:calc(100vw - 65px);
     }
 
     .category-button {
-        width:170px !important;
+        width:100% !important;
         min-height:44px !important;
         font-size:14px !important;
     }
@@ -274,6 +367,25 @@ body {
         width:160px;
         min-height:40px;
         font-size:13px;
+    }
+
+    .map-side-control {
+        margin-right:5px;
+    }
+
+    .map-side-button {
+        width:42px;
+        height:42px;
+        font-size:20px;
+    }
+
+    .coordinate-info {
+        right:6px;
+        bottom:6px;
+        min-width:145px;
+        font-size:11px;
+        line-height:17px;
+        padding:5px 7px;
     }
 
     .live-route-info {
@@ -297,8 +409,48 @@ body {
 
 <div id="map"></div>
 
+
+<!-- ================================================= -->
+<!-- اطلاعات مسیر -->
+<!-- ================================================= -->
+
 <div id="liveRouteInfo"
      class="live-route-info">
+</div>
+
+
+<!-- ================================================= -->
+<!-- مختصات UTM و ارتفاع -->
+<!-- ================================================= -->
+
+<div id="coordinateInfo"
+     class="coordinate-info">
+
+    <div class="coordinate-row">
+        <span class="coordinate-label">E:</span>
+        <span id="utmE"
+              class="coordinate-value">---</span>
+    </div>
+
+    <div class="coordinate-row">
+        <span class="coordinate-label">N:</span>
+        <span id="utmN"
+              class="coordinate-value">---</span>
+    </div>
+
+    <div class="coordinate-row">
+        <span class="coordinate-label">Zone:</span>
+        <span id="utmZone"
+              class="coordinate-value">---</span>
+    </div>
+
+    <div class="coordinate-row">
+        <span class="coordinate-label">Elev:</span>
+        <span id="elevation"
+              class="coordinate-value">---</span>
+        <span> m</span>
+    </div>
+
 </div>
 
 
@@ -581,7 +733,7 @@ var layer_TXT1400_3637_2 = new L.geoJson(
 
 var measureControl = new L.Control.Measure({
 
-    position:'topleft',
+    position:'topright',
 
     primaryLengthUnit:'meters',
 
@@ -589,7 +741,11 @@ var measureControl = new L.Control.Measure({
 
     primaryAreaUnit:'sqmeters',
 
-    secondaryAreaUnit:'hectares'
+    secondaryAreaUnit:'hectares',
+
+    activeColor:'#ff0000',
+
+    completedColor:'#00a000'
 
 });
 
@@ -861,8 +1017,6 @@ function geoJSONToKML(geojson){
         var geometry=feature.geometry;
 
 
-        /* ---------------- Point ---------------- */
-
         if(geometry.type==='Point'){
 
             var c=geometry.coordinates;
@@ -876,8 +1030,6 @@ function geoJSONToKML(geojson){
 
         }
 
-
-        /* ---------------- MultiPoint ---------------- */
 
         else if(geometry.type==='MultiPoint'){
 
@@ -894,8 +1046,6 @@ function geoJSONToKML(geojson){
 
         }
 
-
-        /* ---------------- LineString ---------------- */
 
         else if(geometry.type==='LineString'){
 
@@ -917,8 +1067,6 @@ function geoJSONToKML(geojson){
 
         }
 
-
-        /* ---------------- MultiLineString ---------------- */
 
         else if(geometry.type==='MultiLineString'){
 
@@ -944,8 +1092,6 @@ function geoJSONToKML(geojson){
 
         }
 
-
-        /* ---------------- Polygon ---------------- */
 
         else if(geometry.type==='Polygon'){
 
@@ -994,8 +1140,6 @@ function geoJSONToKML(geojson){
 
         }
 
-
-        /* ---------------- MultiPolygon ---------------- */
 
         else if(geometry.type==='MultiPolygon'){
 
@@ -1092,8 +1236,6 @@ function importKMZFile(file){
         var arrayBuffer=e.target.result;
 
 
-        /* ---------- KMZ ---------- */
-
         if(fileName.endsWith('.kmz')){
 
             JSZip.loadAsync(arrayBuffer)
@@ -1152,8 +1294,6 @@ function importKMZFile(file){
 
         }
 
-
-        /* ---------- KML ---------- */
 
         else{
 
@@ -1403,6 +1543,14 @@ var lastPosition=null;
 
 
 /* ================================================= */
+/* متغیرهای ارتفاع */
+/* ================================================= */
+
+var lastElevationRequest=0;
+var currentElevation=null;
+
+
+/* ================================================= */
 /* متغیرهای مسیریابی */
 /* ================================================= */
 
@@ -1417,36 +1565,377 @@ var lastRouteRequestTime=0;
 
 
 /* ================================================= */
-/* آیکون کاربر */
+/* تبدیل Lat/Lon به UTM - WGS84 */
 /* ================================================= */
 
-function createUserIcon(heading){
+function latLonToUTM(lat,lon){
 
-    var html=
-        '<div class="user-location-marker">' +
+    var a=6378137.0;
+    var eccSquared=0.00669438;
+    var k0=0.9996;
 
-        '<div class="user-location-arrow" ' +
-        'style="transform:rotate('+heading+'deg)">' +
-        '</div>' +
+    var LongOrigin;
+    var eccPrimeSquared;
 
-        '<div class="user-location-dot"></div>' +
+    var N,T,C,A,M;
 
-        '</div>';
+    var LatRad=lat*Math.PI/180.0;
+
+    var LongRad=lon*Math.PI/180.0;
+
+    var ZoneNumber=
+        Math.floor((lon+180)/6)+1;
+
+    /*
+       اصلاح مخصوص نروژ
+    */
+
+    if(
+        lat>=56.0 &&
+        lat<64.0 &&
+        lon>=3.0 &&
+        lon<12.0
+    ){
+
+        ZoneNumber=32;
+
+    }
 
 
-    return L.divIcon({
+    /*
+       اصلاح مخصوص Svalbard
+    */
 
-        className:'',
+    if(
+        lat>=72.0 &&
+        lat<84.0
+    ){
 
-        html:html,
+        if(lon>=0 && lon<9){
 
-        iconSize:[32,32],
+            ZoneNumber=31;
 
-        iconAnchor:[16,16]
+        }
+
+        else if(lon>=9 && lon<21){
+
+            ZoneNumber=33;
+
+        }
+
+        else if(lon>=21 && lon<33){
+
+            ZoneNumber=35;
+
+        }
+
+        else if(lon>=33 && lon<42){
+
+            ZoneNumber=37;
+
+        }
+
+    }
+
+
+    LongOrigin=
+        (ZoneNumber-1)*6-180+3;
+
+    var LongOriginRad=
+        LongOrigin*Math.PI/180.0;
+
+
+    eccPrimeSquared=
+        eccSquared/
+        (1-eccSquared);
+
+
+    N=
+        a/
+        Math.sqrt(
+            1-
+            eccSquared*
+            Math.sin(LatRad)*
+            Math.sin(LatRad)
+        );
+
+
+    T=
+        Math.tan(LatRad)*
+        Math.tan(LatRad);
+
+
+    C=
+        eccPrimeSquared*
+        Math.cos(LatRad)*
+        Math.cos(LatRad);
+
+
+    A=
+        Math.cos(LatRad)*
+        (
+            LongRad-LongOriginRad
+        );
+
+
+    M=
+        a*
+        (
+            (1-eccSquared/4-
+             3*eccSquared*eccSquared/64-
+             5*eccSquared*eccSquared*eccSquared/256)
+            *LatRad
+
+            -
+
+            (3*eccSquared/8+
+             3*eccSquared*eccSquared/32+
+             45*eccSquared*eccSquared*eccSquared/1024)
+            *Math.sin(2*LatRad)
+
+            +
+
+            (15*eccSquared*eccSquared/256+
+             45*eccSquared*eccSquared*eccSquared/1024)
+            *Math.sin(4*LatRad)
+
+            -
+
+            (35*eccSquared*eccSquared*eccSquared/3072)
+            *Math.sin(6*LatRad)
+        );
+
+
+    var UTMEasting=
+        (
+            k0*N*
+            (
+                A+
+                (1-T+C)*A*A*A/6+
+                (5-18*T+T*T+
+                 72*C-
+                 58*eccPrimeSquared)
+                *A*A*A*A*A/120
+            )
+            +
+            500000.0
+        );
+
+
+    var UTMNorthing=
+        (
+            k0*
+            (
+                M+
+                N*
+                Math.tan(LatRad)
+                *
+                (
+                    A*A/2+
+                    (5-T+9*C+
+                     4*C*C)
+                    *A*A*A*A/24+
+                    (61-58*T+
+                     T*T+
+                     600*C-
+                     330*eccPrimeSquared)
+                    *A*A*A*A*A*A/720
+                )
+            )
+        );
+
+
+    if(lat<0){
+
+        UTMNorthing+=10000000.0;
+
+    }
+
+
+    var hemisphere=
+        lat>=0
+        ?
+        'N'
+        :
+        'S';
+
+
+    return {
+
+        easting:UTMEasting,
+
+        northing:UTMNorthing,
+
+        zone:ZoneNumber+
+             hemisphere
+
+    };
+
+}
+
+
+/* ================================================= */
+/* نمایش مختصات UTM */
+/* ================================================= */
+
+function updateCoordinateInfo(lat,lon,elevation){
+
+    if(
+        typeof lat!=='number' ||
+        typeof lon!=='number'
+    ){
+
+        return;
+
+    }
+
+
+    var utm=latLonToUTM(
+        lat,
+        lon
+    );
+
+
+    document.getElementById(
+        'utmE'
+    ).textContent=
+        utm.easting.toFixed(2);
+
+
+    document.getElementById(
+        'utmN'
+    ).textContent=
+        utm.northing.toFixed(2);
+
+
+    document.getElementById(
+        'utmZone'
+    ).textContent=
+        utm.zone;
+
+
+    if(
+        elevation!==null &&
+        elevation!==undefined &&
+        !isNaN(elevation)
+    ){
+
+        document.getElementById(
+            'elevation'
+        ).textContent=
+            Number(elevation).toFixed(1);
+
+    }
+
+}
+
+
+/* ================================================= */
+/* ارتفاع از سرویس ارتفاعی */
+/* ================================================= */
+
+function getElevationFromService(lat,lon){
+
+    var now=Date.now();
+
+
+    /*
+       هر 30 ثانیه یک درخواست
+    */
+
+    if(
+        now-lastElevationRequest<30000
+    ){
+
+        return;
+
+    }
+
+
+    lastElevationRequest=now;
+
+
+    fetch(
+        'https://api.open-elevation.com/api/v1/lookup?locations='+
+        lat+','+lon
+    )
+
+    .then(function(response){
+
+        if(!response.ok){
+
+            throw new Error(
+                'Elevation HTTP '+
+                response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+    .then(function(data){
+
+        if(
+            data &&
+            data.results &&
+            data.results.length
+        ){
+
+            var elevation=
+                data.results[0].elevation;
+
+
+            if(
+                elevation!==null &&
+                elevation!==undefined
+            ){
+
+                currentElevation=
+                    Number(elevation);
+
+
+                updateCoordinateInfo(
+                    lat,
+                    lon,
+                    currentElevation
+                );
+
+            }
+
+        }
+
+    })
+
+    .catch(function(error){
+
+        console.log(
+            'Elevation error:',
+            error
+        );
 
     });
 
 }
+
+
+/* ================================================= */
+/* نمایش مختصات با حرکت موس */
+/* ================================================= */
+
+map.on(
+    'mousemove',
+    function(e){
+
+        updateCoordinateInfo(
+            e.latlng.lat,
+            e.latlng.lng,
+            currentElevation
+        );
+
+    }
+);
 
 
 /* ================================================= */
@@ -1483,6 +1972,39 @@ function calculateBearing(
 
 
 /* ================================================= */
+/* آیکون کاربر */
+/* ================================================= */
+
+function createUserIcon(heading){
+
+    var html=
+        '<div class="user-location-marker">' +
+
+        '<div class="user-location-arrow" ' +
+        'style="transform:rotate('+heading+'deg)">' +
+        '</div>' +
+
+        '<div class="user-location-dot"></div>' +
+
+        '</div>';
+
+
+    return L.divIcon({
+
+        className:'',
+
+        html:html,
+
+        iconSize:[32,32],
+
+        iconAnchor:[16,16]
+
+    });
+
+}
+
+
+/* ================================================= */
 /* GPS زنده */
 /* ================================================= */
 
@@ -1502,10 +2024,61 @@ function startLiveLocation(){
 
         function(position){
 
-            var lat=position.coords.latitude;
-            var lng=position.coords.longitude;
-            var accuracy=position.coords.accuracy;
-            var heading=position.coords.heading;
+            var lat=
+                position.coords.latitude;
+
+            var lng=
+                position.coords.longitude;
+
+            var accuracy=
+                position.coords.accuracy;
+
+            var heading=
+                position.coords.heading;
+
+
+            /*
+               ارتفاع GPS
+            */
+
+            var gpsAltitude=
+                position.coords.altitude;
+
+
+            if(
+                gpsAltitude!==null &&
+                !isNaN(gpsAltitude)
+            ){
+
+                currentElevation=
+                    gpsAltitude;
+
+            }
+
+
+            /*
+               اگر GPS ارتفاع نداشت،
+               از سرویس ارتفاعی استفاده کن
+            */
+
+            if(
+                gpsAltitude===null ||
+                isNaN(gpsAltitude)
+            ){
+
+                getElevationFromService(
+                    lat,
+                    lng
+                );
+
+            }
+
+
+            updateCoordinateInfo(
+                lat,
+                lng,
+                currentElevation
+            );
 
 
             if(
@@ -1658,7 +2231,169 @@ function goToMyLocation(){
 
 
 /* ================================================= */
-/* شروع مسیریابی */
+/* قطب‌نما */
+/* ================================================= */
+
+var compassHeading=0;
+
+
+function updateCompassButton(){
+
+    var button=
+        document.getElementById(
+            'compassButton'
+        );
+
+    if(!button){
+        return;
+    }
+
+
+    button.innerHTML=
+        '🧭';
+
+
+    button.title=
+        'جهت جغرافیایی';
+
+
+    button.setAttribute(
+        'data-heading',
+        Math.round(compassHeading)
+    );
+
+}
+
+
+/* ================================================= */
+/* شروع قطب‌نما */
+/* ================================================= */
+
+function startCompass(){
+
+    /*
+       iPhone / iPad
+    */
+
+    if(
+        typeof DeviceOrientationEvent !==
+        'undefined' &&
+        typeof DeviceOrientationEvent.requestPermission ===
+        'function'
+    ){
+
+        DeviceOrientationEvent
+        .requestPermission()
+
+        .then(function(permission){
+
+            if(permission==='granted'){
+
+                window.addEventListener(
+                    'deviceorientation',
+                    handleOrientation,
+                    true
+                );
+
+            }
+
+            else{
+
+                alert(
+                    'اجازه دسترسی به جهت‌یابی داده نشد.'
+                );
+
+            }
+
+        })
+
+        .catch(function(error){
+
+            console.log(error);
+
+        });
+
+    }
+
+    else{
+
+        window.addEventListener(
+            'deviceorientationabsolute',
+            handleOrientation,
+            true
+        );
+
+        window.addEventListener(
+            'deviceorientation',
+            handleOrientation,
+            true
+        );
+
+    }
+
+}
+
+
+/* ================================================= */
+/* دریافت جهت دستگاه */
+/* ================================================= */
+
+function handleOrientation(event){
+
+    var heading=null;
+
+
+    /*
+       Android / absolute
+    */
+
+    if(
+        event.absolute===true &&
+        event.alpha!==null
+    ){
+
+        heading=
+            360-event.alpha;
+
+    }
+
+
+    /*
+       iOS
+    */
+
+    if(
+        event.webkitCompassHeading!==undefined &&
+        event.webkitCompassHeading!==null
+    ){
+
+        heading=
+            event.webkitCompassHeading;
+
+    }
+
+
+    if(
+        heading===null ||
+        isNaN(heading)
+    ){
+
+        return;
+
+    }
+
+
+    compassHeading=
+        (heading+360)%360;
+
+
+    updateCompassButton();
+
+}
+
+
+/* ================================================= */
+/* مسیریابی */
 /* ================================================= */
 
 function startLiveRouting(mode){
@@ -2108,6 +2843,87 @@ function deleteDrawnFeatures(){
 
 
 /* ================================================= */
+/* کنترل سمت راست */
+/* ================================================= */
+
+var mapSideControl=L.control({
+    position:'topright'
+});
+
+
+mapSideControl.onAdd=function(){
+
+    var div=L.DomUtil.create(
+        'div',
+        'leaflet-control map-side-control'
+    );
+
+
+    div.innerHTML=
+
+        '<button '+
+        'id="compassButton" '+
+        'class="map-side-button" '+
+        'title="جهت جغرافیایی">'+
+        '🧭'+
+        '</button>'+
+
+
+        '<button '+
+        'id="measureSideButton" '+
+        'class="map-side-button" '+
+        'title="اندازه‌گیری">'+
+        '📏'+
+        '</button>';
+
+
+    L.DomEvent.disableClickPropagation(div);
+
+    return div;
+
+};
+
+
+mapSideControl.addTo(map);
+
+
+/* ================================================= */
+/* قطب‌نما */
+/* ================================================= */
+
+document.getElementById(
+    'compassButton'
+).onclick=function(){
+
+    startCompass();
+
+};
+
+
+/* ================================================= */
+/* اندازه‌گیری سمت راست */
+/* ================================================= */
+
+document.getElementById(
+    'measureSideButton'
+).onclick=function(){
+
+    var button=
+        document.querySelector(
+            '.leaflet-control-measure-toggle'
+        );
+
+
+    if(button){
+
+        button.click();
+
+    }
+
+};
+
+
+/* ================================================= */
 /* منوی اصلی */
 /* ================================================= */
 
@@ -2126,8 +2942,6 @@ groupControl.onAdd=function(){
 
     div.innerHTML=
 
-        /* دکمه اصلی */
-
         '<button '+
         'id="groupMainButton" '+
         'class="group-main-button" '+
@@ -2136,14 +2950,8 @@ groupControl.onAdd=function(){
         '</button>'+
 
 
-        /* منوی اصلی */
-
         '<div id="groupMenu" class="group-menu">'+
 
-
-        /* ================================================= */
-        /* دسته اول: موقعیت و نقشه */
-        /* ================================================= */
 
         '<button '+
         'id="locationCategoryButton" '+
@@ -2172,20 +2980,12 @@ groupControl.onAdd=function(){
         '⛔ پایان مسیر'+
         '</button>'+
 
-        '<button id="measureButton2">'+
-        '📐 اندازه‌گیری'+
-        '</button>'+
-
         '<button id="layersButton2">'+
         '🗂️ لایه‌ها'+
         '</button>'+
 
         '</div>'+
 
-
-        /* ================================================= */
-        /* دسته دوم: ابزارها */
-        /* ================================================= */
 
         '<button '+
         'id="toolsCategoryButton" '+
@@ -2199,8 +2999,6 @@ groupControl.onAdd=function(){
         'class="group-submenu">'+
 
 
-        /* KMZ */
-
         '<button id="importKMZButton2">'+
         '📂 ورود KMZ/KML'+
         '</button>'+
@@ -2213,8 +3011,6 @@ groupControl.onAdd=function(){
         '🗑️ پاک کردن KMZ'+
         '</button>'+
 
-
-        /* رسم */
 
         '<button id="drawMarkerButton">'+
         '📍 رسم نقطه'+
@@ -2240,8 +3036,6 @@ groupControl.onAdd=function(){
         '🗑️ پاک کردن همه'+
         '</button>'+
 
-
-        /* فایل */
 
         '<input '+
         'type="file" '+
@@ -2405,27 +3199,6 @@ document.getElementById(
 ).onclick=function(){
 
     stopLiveRoute();
-
-};
-
-
-/* ================================================= */
-/* اندازه‌گیری */
-/* ================================================= */
-
-document.getElementById(
-    'measureButton2'
-).onclick=function(){
-
-    var button=document.querySelector(
-        '.leaflet-control-measure-toggle'
-    );
-
-    if(button){
-
-        button.click();
-
-    }
 
 };
 
