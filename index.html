@@ -22,10 +22,6 @@
 
 <style>
 
-/* ================================================= */
-/* صفحه و نقشه */
-/* ================================================= */
-
 html,
 body {
     width:100%;
@@ -90,7 +86,7 @@ body {
 
 
 /* ================================================= */
-/* دکمه‌های اصلی دو دسته */
+/* دکمه‌های اصلی */
 /* ================================================= */
 
 .category-button {
@@ -311,11 +307,6 @@ body {
 /* ================================================= */
 /* کنترل اندازه‌گیری */
 /* ================================================= */
-
-/*
-   قبلاً این قسمت display:none بود و باعث می‌شد
-   ابزار اندازه‌گیری عملاً کار نکند.
-*/
 
 .leaflet-control-measure {
     display:block !important;
@@ -1586,6 +1577,7 @@ function latLonToUTM(lat,lon){
     var ZoneNumber=
         Math.floor((lon+180)/6)+1;
 
+
     /*
        اصلاح مخصوص نروژ
     */
@@ -1839,10 +1831,6 @@ function getElevationFromService(lat,lon){
     var now=Date.now();
 
 
-    /*
-       هر 30 ثانیه یک درخواست
-    */
-
     if(
         now-lastElevationRequest<30000
     ){
@@ -2037,10 +2025,6 @@ function startLiveLocation(){
                 position.coords.heading;
 
 
-            /*
-               ارتفاع GPS
-            */
-
             var gpsAltitude=
                 position.coords.altitude;
 
@@ -2055,11 +2039,6 @@ function startLiveLocation(){
 
             }
 
-
-            /*
-               اگر GPS ارتفاع نداشت،
-               از سرویس ارتفاعی استفاده کن
-            */
 
             if(
                 gpsAltitude===null ||
@@ -2132,7 +2111,7 @@ function startLiveLocation(){
                 ).addTo(map);
 
                 userMarker.bindPopup(
-                    '📍 موقعیت فعلی شما'
+                    '🎯 موقعیت فعلی شما'
                 );
 
             }
@@ -2271,10 +2250,6 @@ function updateCompassButton(){
 
 function startCompass(){
 
-    /*
-       iPhone / iPad
-    */
-
     if(
         typeof DeviceOrientationEvent !==
         'undefined' &&
@@ -2343,10 +2318,6 @@ function handleOrientation(event){
     var heading=null;
 
 
-    /*
-       Android / absolute
-    */
-
     if(
         event.absolute===true &&
         event.alpha!==null
@@ -2357,10 +2328,6 @@ function handleOrientation(event){
 
     }
 
-
-    /*
-       iOS
-    */
 
     if(
         event.webkitCompassHeading!==undefined &&
@@ -2861,6 +2828,10 @@ mapSideControl.onAdd=function(){
 
     div.innerHTML=
 
+        /*
+           جهت جغرافیایی
+        */
+
         '<button '+
         'id="compassButton" '+
         'class="map-side-button" '+
@@ -2868,6 +2839,20 @@ mapSideControl.onAdd=function(){
         '🧭'+
         '</button>'+
 
+        /*
+           موقعیت من
+        */
+
+        '<button '+
+        'id="myLocationSideButton" '+
+        'class="map-side-button" '+
+        'title="موقعیت من">'+
+        '🎯'+
+        '</button>'+
+
+        /*
+           اندازه‌گیری
+        */
 
         '<button '+
         'id="measureSideButton" '+
@@ -2896,6 +2881,19 @@ document.getElementById(
 ).onclick=function(){
 
     startCompass();
+
+};
+
+
+/* ================================================= */
+/* موقعیت من - دکمه مستقل سمت راست */
+/* ================================================= */
+
+document.getElementById(
+    'myLocationSideButton'
+).onclick=function(){
+
+    goToMyLocation();
 
 };
 
@@ -2964,9 +2962,6 @@ groupControl.onAdd=function(){
         'id="locationSubmenu" '+
         'class="group-submenu">'+
 
-        '<button id="locationButton2">'+
-        '📍 موقعیت من'+
-        '</button>'+
 
         '<button id="liveCarButton2">'+
         '🚗 مسیر خودرو'+
@@ -3143,19 +3138,6 @@ document.getElementById(
         submenu.classList.add('open');
 
     }
-
-};
-
-
-/* ================================================= */
-/* موقعیت من */
-/* ================================================= */
-
-document.getElementById(
-    'locationButton2'
-).onclick=function(){
-
-    goToMyLocation();
 
 };
 
