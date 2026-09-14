@@ -191,6 +191,30 @@ body {
 }
 
 /* ================================================= */
+/* پیام موقت ناوبری */
+/* ================================================= */
+
+.navigation-message-label {
+    background:transparent !important;
+    border:0 !important;
+}
+
+.navigation-message-box {
+    background:rgba(255,255,255,0.96);
+    border:2px solid #555;
+    border-radius:8px;
+    padding:5px 9px;
+    font-family:Arial,sans-serif;
+    font-size:12px;
+    font-weight:bold;
+    color:#222;
+    white-space:nowrap;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+    direction:rtl;
+}
+
+/* ================================================= */
 /* Popup انتخاب مسیر */
 /* ================================================= */
 
@@ -365,9 +389,9 @@ body {
     }
 
     .map-side-control {
-    margin-top:45px !important;
-    margin-right:5px;
-}
+        margin-top:45px !important;
+        margin-right:5px;
+    }
 
     .map-side-button {
         width:42px;
@@ -384,12 +408,6 @@ body {
         padding:5px 7px;
     }
 
-    .live-route-info {
-        bottom:15px;
-        font-size:13px;
-        max-width:85%;
-    }
-
     .route-info-box {
         font-size:11px;
         line-height:16px;
@@ -400,6 +418,11 @@ body {
         min-width:70px;
         padding:9px 8px;
         font-size:12px;
+    }
+
+    .navigation-message-box {
+        font-size:11px;
+        padding:4px 7px;
     }
 }
 
@@ -412,7 +435,6 @@ body {
 <body>
 
 <div id="map"></div>
-
 
 <div id="coordinateInfo"
      class="coordinate-info">
@@ -588,8 +610,6 @@ function pop_Lmt1400_3637_1(feature,layer){
         }
     );
 
-    /* جلوگیری از تبدیل کلیک روی عارضه به مقصد مسیر */
-
     layer.on(
         'click',
         function(e){
@@ -665,8 +685,6 @@ function pop_TXT1400_3637_2(feature,layer){
             maxHeight:400
         }
     );
-
-    /* جلوگیری از تبدیل کلیک روی عارضه به مقصد مسیر */
 
     layer.on(
         'click',
@@ -1483,18 +1501,87 @@ var lastElevationRequest=0;
 var currentElevation=null;
 
 /* ================================================= */
-/* متغیرهای مسیریابی */
+/* متغیرهای مسیریابی هوشمند */
 /* ================================================= */
 
 var liveRouteLayer=null;
+
 var liveDestinationMarker=null;
+
 var liveDestination=null;
+
 var liveRoutingMode=null;
+
 var liveRouteActive=false;
+
+/* آخرین موقعیت استفاده‌شده برای بررسی مسیر */
 var lastRoutePosition=null;
+
+/* هندسه آخرین مسیر */
+var lastRouteGeometry=null;
+
+/* کنترل درخواست */
 var isRoutingRequestRunning=false;
+
 var lastRouteRequestTime=0;
+
+/* اطلاعات روی خود مسیر */
 var routeInfoMarker=null;
+
+/* پیام‌های موقت ناوبری */
+var navigationMessageMarker=null;
+
+var navigationMessageTimer=null;
+
+/* تعداد دفعات تشخیص خروج از مسیر */
+var offRouteCount=0;
+
+/* آخرین دقت GPS */
+var currentGPSAccuracy=999;
+
+/* ================================================= */
+/* تنظیمات هوشمند مسیر */
+/* ================================================= */
+
+/*
+   حداقل جابه‌جایی برای بررسی مجدد
+   مسیر فعلی
+*/
+var ROUTE_UPDATE_DISTANCE=30;
+
+/*
+   اگر فاصله از خط مسیر از این مقدار بیشتر شود،
+   احتمال خروج از مسیر وجود دارد.
+*/
+var OFF_ROUTE_DISTANCE=25;
+
+/*
+   چند موقعیت متوالی باید خارج از مسیر باشند
+   تا مسیر دوباره محاسبه شود.
+*/
+var OFF_ROUTE_CONFIRMATIONS=3;
+
+/*
+   حداقل دقت GPS برای تصمیم‌گیری.
+   اگر accuracy بدتر از این مقدار باشد،
+   GPS را برای reroute معتبر نمی‌دانیم.
+*/
+var MAX_ACCEPTABLE_GPS_ACCURACY=30;
+
+/*
+   نزدیک مقصد
+*/
+var DESTINATION_NEAR_DISTANCE=50;
+
+/*
+   رسیدن به مقصد
+*/
+var DESTINATION_REACHED_DISTANCE=20;
+
+/*
+   فاصله زمانی حداقل بین دو درخواست مسیر
+*/
+var ROUTE_REQUEST_COOLDOWN=5000;
 
 /* ================================================= */
 /* UTM */
@@ -1905,6 +1992,8 @@ function startLiveLocation(){
             var accuracy=
                 position.coords.accuracy;
 
+            currentGPSAccuracy=accuracy;
+
             var heading=
                 position.coords.heading;
 
@@ -2207,7 +2296,235 @@ function handleOrientation(event){
 }
 
 /* ================================================= */
-/* پاک کردن مسیر قبلی */
+/* فاصله نقطه تا قطعه خط */
+/* ================================================= */
+
+function distancePointToSegment(
+    p,
+    a,
+    b
+){
+
+    var latRad=
+        p.lat*Math.PI/180;
+
+    var metersPerLat=
+        111320;
+
+    var metersPerLng=
+        111320*
+        Math.cos(latRad);
+
+    var px=
+        p.lng*metersPerLng;
+
+    var py=
+        p.lat*metersPerLat;
+
+    var ax=
+        a.lng*metersPerLng;
+
+    var ay=
+        a.lat*metersPerLat;
+
+    var bx=
+        b.lng*metersPerLng;
+
+    var by=
+        b.lat*metersPerLat;
+
+    var dx=bx-ax;
+    var dy=by-ay;
+
+    if(
+        dx===0 &&
+        dy===0
+    ){
+
+        return Math.sqrt(
+            Math.pow(px-ax,2)+
+            Math.pow(py-ay,2)
+        );
+
+    }
+
+    var t=
+        (
+            (px-ax)*dx+
+            (py-ay)*dy
+        )/
+        (
+            dx*dx+
+            dy*dy
+        );
+
+    t=Math.max(
+        0,
+        Math.min(1,t)
+    );
+
+    var closestX=
+        ax+t*dx;
+
+    var closestY=
+        ay+t*dy;
+
+    return Math.sqrt(
+        Math.pow(px-closestX,2)+
+        Math.pow(py-closestY,2)
+    );
+
+}
+
+/* ================================================= */
+/* فاصله نقطه تا مسیر */
+/* ================================================= */
+
+function distanceFromGeoJSONRoute(
+    point,
+    geometry
+){
+
+    if(
+        !geometry ||
+        !geometry.coordinates
+    ){
+
+        return Infinity;
+
+    }
+
+    var coordinates=
+        geometry.coordinates;
+
+    var minimum=
+        Infinity;
+
+    for(
+        var i=0;
+        i<coordinates.length-1;
+        i++
+    ){
+
+        var a=L.latLng(
+            coordinates[i][1],
+            coordinates[i][0]
+        );
+
+        var b=L.latLng(
+            coordinates[i+1][1],
+            coordinates[i+1][0]
+        );
+
+        var distance=
+            distancePointToSegment(
+                point,
+                a,
+                b
+            );
+
+        if(distance<minimum){
+
+            minimum=distance;
+
+        }
+
+    }
+
+    return minimum;
+
+}
+
+/* ================================================= */
+/* پیام ناوبری */
+/* ================================================= */
+
+function showNavigationMessage(
+    message,
+    duration
+){
+
+    if(navigationMessageTimer){
+
+        clearTimeout(
+            navigationMessageTimer
+        );
+
+        navigationMessageTimer=null;
+
+    }
+
+    if(navigationMessageMarker){
+
+        map.removeLayer(
+            navigationMessageMarker
+        );
+
+        navigationMessageMarker=null;
+
+    }
+
+    if(!message){
+
+        return;
+
+    }
+
+    var position=
+        map._userLocation ||
+        liveDestination;
+
+    if(!position){
+
+        return;
+
+    }
+
+    var icon=L.divIcon({
+
+        className:
+            'navigation-message-label',
+
+        html:
+            '<div class="navigation-message-box">'+
+            message+
+            '</div>',
+
+        iconSize:[160,38],
+
+        iconAnchor:[80,50]
+
+    });
+
+    navigationMessageMarker=
+        L.marker(
+            position,
+            {
+                icon:icon,
+                interactive:false,
+                zIndexOffset:2000
+            }
+        ).addTo(map);
+
+    navigationMessageTimer=
+        setTimeout(function(){
+
+            if(navigationMessageMarker){
+
+                map.removeLayer(
+                    navigationMessageMarker
+                );
+
+                navigationMessageMarker=null;
+
+            }
+
+        }, duration || 1800);
+
+}
+
+/* ================================================= */
+/* پاک کردن مسیر */
 /* ================================================= */
 
 function clearCurrentRoute(){
@@ -2242,7 +2559,31 @@ function clearCurrentRoute(){
 
     }
 
+    if(navigationMessageMarker){
 
+        map.removeLayer(
+            navigationMessageMarker
+        );
+
+        navigationMessageMarker=null;
+
+    }
+
+    if(navigationMessageTimer){
+
+        clearTimeout(
+            navigationMessageTimer
+        );
+
+        navigationMessageTimer=null;
+
+    }
+
+    lastRouteGeometry=null;
+
+    lastRoutePosition=null;
+
+    offRouteCount=0;
 
 }
 
@@ -2274,43 +2615,17 @@ function selectRoutingMode(mode){
 
     lastRoutePosition=null;
 
+    lastRouteGeometry=null;
+
+    offRouteCount=0;
+
     isRoutingRequestRunning=false;
 
     lastRouteRequestTime=0;
 
-    if(map.closePopup){
-
-        map.closePopup();
-
-    }
-
     if(liveDestinationMarker){
 
-        liveDestinationMarker.bindPopup(
-            '<div class="routing-popup">' +
-
-            '<div class="routing-popup-title">' +
-            '🏁 مقصد انتخاب شده' +
-            '</div>' +
-
-            '<div class="routing-popup-buttons">' +
-
-            '<button ' +
-            'class="routing-popup-button routing-car" ' +
-            'onclick="selectRoutingMode(\'driving\')">' +
-            '🚗 خودرو' +
-            '</button>' +
-
-            '<button ' +
-            'class="routing-popup-button routing-foot" ' +
-            'onclick="selectRoutingMode(\'foot\')">' +
-            '🚶 پیاده' +
-            '</button>' +
-
-            '</div>' +
-
-            '</div>'
-        );
+        liveDestinationMarker.closePopup();
 
     }
 
@@ -2326,8 +2641,6 @@ map.on(
     'click',
     function(e){
 
-        /* اگر GPS هنوز آماده نیست */
-
         if(!map._userLocation){
 
             alert(
@@ -2338,29 +2651,17 @@ map.on(
 
         }
 
-        /* مقصد جدید */
-
-        liveDestination=e.latlng;
-
-        /* اگر مسیر قبلی وجود دارد، پاک شود */
-
         liveRouteActive=false;
 
         liveRoutingMode=null;
 
-        lastRoutePosition=null;
-
-        isRoutingRequestRunning=false;
-
         clearCurrentRoute();
 
-        /* مقصد جدید */
+        liveDestination=e.latlng;
 
         liveDestinationMarker=L.marker(
             liveDestination
         ).addTo(map);
-
-        /* Popup مقصد */
 
         liveDestinationMarker.bindPopup(
 
@@ -2390,7 +2691,7 @@ map.on(
 
             {
                 closeButton:true,
-                autoClose:true
+                autoClose:false
             }
 
         );
@@ -2414,31 +2715,57 @@ function calculateLiveRoute(firstRoute){
     ){
 
         return;
+
     }
 
     var now=Date.now();
 
     if(
         !firstRoute &&
-        now-lastRouteRequestTime<5000
+        now-lastRouteRequestTime<
+        ROUTE_REQUEST_COOLDOWN
     ){
 
         return;
+
+    }
+
+    /*
+       اگر GPS دقت کافی ندارد،
+       برای reroute اقدام نکن.
+    */
+
+    if(
+        !firstRoute &&
+        currentGPSAccuracy>
+        MAX_ACCEPTABLE_GPS_ACCURACY
+    ){
+
+        return;
+
     }
 
     isRoutingRequestRunning=true;
 
     lastRouteRequestTime=now;
 
-    var start=map._userLocation;
+    var start=
+        L.latLng(
+            map._userLocation.lat,
+            map._userLocation.lng
+        );
 
-    var end=liveDestination;
+    var end=
+        liveDestination;
 
     var profile;
 
     var server;
 
-    if(liveRoutingMode==='driving'){
+    if(
+        liveRoutingMode===
+        'driving'
+    ){
 
         profile='driving';
 
@@ -2492,6 +2819,7 @@ function calculateLiveRoute(firstRoute){
         if(!liveRouteActive){
 
             return;
+
         }
 
         if(
@@ -2504,9 +2832,22 @@ function calculateLiveRoute(firstRoute){
             );
 
             return;
+
         }
 
-        var route=data.routes[0];
+        var route=
+            data.routes[0];
+
+        lastRouteGeometry=
+            route.geometry;
+
+        lastRoutePosition=
+            L.latLng(
+                start.lat,
+                start.lng
+            );
+
+        offRouteCount=0;
 
         if(liveRouteLayer){
 
@@ -2529,33 +2870,33 @@ function calculateLiveRoute(firstRoute){
         }
 
         liveRouteLayer=L.geoJSON(
+
             route.geometry,
+
             {
                 style:{
                     weight:6,
                     opacity:0.85
                 }
             }
+
         ).addTo(map);
 
-        lastRoutePosition=L.latLng(
-            start.lat,
-            start.lng
-        );
+        var distance=
+            route.distance/1000;
 
-        var distance=route.distance/1000;
-
-        var duration=Math.round(
-            route.duration/60
-        );
+        var duration=
+            Math.round(
+                route.duration/60
+            );
 
         var modeName=
-            liveRoutingMode==='driving'
+            liveRoutingMode===
+            'driving'
             ?
             '🚗 خودرو'
             :
             '🚶 پیاده';
-
 
         var coordinates=
             route.geometry.coordinates;
@@ -2571,69 +2912,92 @@ function calculateLiveRoute(firstRoute){
                 );
 
             var middleCoordinate=
-                coordinates[middleIndex];
+                coordinates[
+                    middleIndex
+                ];
 
-            var routeInfoIcon=L.divIcon({
+            var routeInfoIcon=
+                L.divIcon({
 
-                className:
-                    'route-info-label',
+                    className:
+                        'route-info-label',
 
-                html:
+                    html:
 
-                    '<div class="route-info-box">'+
+                        '<div class="route-info-box">'+
 
-                    modeName+
+                        modeName+
 
-                    '<br>'+
+                        '<br>'+
 
-                    '📏 '+
-                    distance.toFixed(2)+
-                    ' km'+
+                        '📏 '+
+                        distance.toFixed(2)+
+                        ' km'+
 
-                    ' &nbsp; | &nbsp; '+
+                        ' &nbsp; | &nbsp; '+
 
-                    '⏱ '+
-                    duration+
-                    ' دقیقه'+
+                        '⏱ '+
+                        duration+
+                        ' دقیقه'+
 
-                    '</div>',
+                        '</div>',
 
-                iconSize:[
-                    150,
-                    58
-                ],
+                    iconSize:[
+                        150,
+                        58
+                    ],
 
-                iconAnchor:[
-                    75,
-                    29
-                ]
+                    iconAnchor:[
+                        75,
+                        29
+                    ]
 
-            });
+                });
 
-            routeInfoMarker=L.marker(
+            routeInfoMarker=
+                L.marker(
 
-                [
-                    middleCoordinate[1],
-                    middleCoordinate[0]
-                ],
+                    [
+                        middleCoordinate[1],
+                        middleCoordinate[0]
+                    ],
 
-                {
-                    icon:routeInfoIcon,
-                    interactive:false,
-                    zIndexOffset:1000
-                }
+                    {
+                        icon:
+                            routeInfoIcon,
 
-            ).addTo(map);
+                        interactive:false,
+
+                        zIndexOffset:1000
+
+                    }
+
+                ).addTo(map);
 
         }
 
         if(firstRoute){
 
             map.fitBounds(
+
                 liveRouteLayer.getBounds(),
+
                 {
-                    padding:[50,50]
+                    padding:[
+                        50,
+                        50
+                    ]
                 }
+
+            );
+
+        }
+
+        else{
+
+            showNavigationMessage(
+                '✅ مسیر جدید محاسبه شد',
+                1800
             );
 
         }
@@ -2645,52 +3009,236 @@ function calculateLiveRoute(firstRoute){
         isRoutingRequestRunning=false;
 
         console.log(
-            'Live routing error:',
+            'Smart routing error:',
             error
         );
 
-        alert(
-            'خطا در دریافت مسیر.\n' +
-            'لطفاً دوباره امتحان کنید.'
-        );
+        if(firstRoute){
+
+            alert(
+                'خطا در دریافت مسیر.\n' +
+                'لطفاً دوباره امتحان کنید.'
+            );
+
+        }
 
     });
 
 }
 
 /* ================================================= */
-/* به‌روزرسانی مسیر */
+/* به‌روزرسانی هوشمند مسیر */
 /* ================================================= */
 
 function updateLiveNavigation(){
 
     if(
         !liveRouteActive ||
-        !map._userLocation
+        !map._userLocation ||
+        !liveDestination
     ){
 
         return;
+
     }
 
-    if(!lastRoutePosition){
+    var current=
+        map._userLocation;
+
+    /* --------------------------------------------- */
+    /* فاصله تا مقصد */
+    /* --------------------------------------------- */
+
+    var distanceToDestination=
+        map.distance(
+            current,
+            liveDestination
+        );
+
+    /* --------------------------------------------- */
+    /* رسیدن به مقصد */
+    /* --------------------------------------------- */
+
+    if(
+        distanceToDestination<=
+        DESTINATION_REACHED_DISTANCE
+    ){
+
+        liveRouteActive=false;
+
+        if(liveRouteLayer){
+
+            liveRouteLayer.setStyle({
+
+                opacity:0.45
+
+            });
+
+        }
+
+        if(routeInfoMarker){
+
+            map.removeLayer(
+                routeInfoMarker
+            );
+
+            routeInfoMarker=null;
+
+        }
+
+        showNavigationMessage(
+            '✅ به مقصد رسیدید',
+            4000
+        );
+
+        return;
+
+    }
+
+    /* --------------------------------------------- */
+    /* نزدیک مقصد */
+    /* --------------------------------------------- */
+
+    if(
+        distanceToDestination<=
+        DESTINATION_NEAR_DISTANCE
+    ){
+
+        showNavigationMessage(
+            '📍 به مقصد نزدیک شدید',
+            1800
+        );
+
+    }
+
+    /* --------------------------------------------- */
+    /* مسیر هنوز محاسبه نشده */
+    /* --------------------------------------------- */
+
+    if(!lastRouteGeometry){
 
         calculateLiveRoute(false);
 
         return;
+
     }
 
-    var current=map._userLocation;
+    /* --------------------------------------------- */
+    /* GPS ضعیف */
+    /* --------------------------------------------- */
 
-    var distanceMoved=map.distance(
-        lastRoutePosition,
-        current
+    if(
+        currentGPSAccuracy>
+        MAX_ACCEPTABLE_GPS_ACCURACY
+    ){
+
+        return;
+
+    }
+
+    /* --------------------------------------------- */
+    /* آیا کاربر حداقل 30 متر جابه‌جا شده؟ */
+    /* --------------------------------------------- */
+
+    if(lastRoutePosition){
+
+        var moved=
+            map.distance(
+                lastRoutePosition,
+                current
+            );
+
+        if(
+            moved<
+            ROUTE_UPDATE_DISTANCE
+        ){
+
+            return;
+
+        }
+
+    }
+
+    /* --------------------------------------------- */
+    /* فاصله از خط مسیر */
+    /* --------------------------------------------- */
+
+    var distanceFromRoute=
+        distanceFromGeoJSONRoute(
+            current,
+            lastRouteGeometry
+        );
+
+    /* --------------------------------------------- */
+    /* هنوز روی مسیر */
+    /* --------------------------------------------- */
+
+    if(
+        distanceFromRoute<=
+        OFF_ROUTE_DISTANCE
+    ){
+
+        offRouteCount=0;
+
+        lastRoutePosition=
+            L.latLng(
+                current.lat,
+                current.lng
+            );
+
+        return;
+
+    }
+
+    /* --------------------------------------------- */
+    /* احتمال خروج از مسیر */
+    /* --------------------------------------------- */
+
+    offRouteCount++;
+
+    showNavigationMessage(
+        '🔄 بررسی مسیر...',
+        1200
     );
 
-    if(distanceMoved>=30){
+    /*
+       هنوز زود است.
+       باید چند GPS متوالی خارج از مسیر باشند.
+    */
 
-        calculateLiveRoute(false);
+    if(
+        offRouteCount<
+        OFF_ROUTE_CONFIRMATIONS
+    ){
+
+        lastRoutePosition=
+            L.latLng(
+                current.lat,
+                current.lng
+            );
+
+        return;
 
     }
+
+    /* --------------------------------------------- */
+    /* خروج واقعی تأیید شد */
+    /* --------------------------------------------- */
+
+    offRouteCount=0;
+
+    lastRoutePosition=
+        L.latLng(
+            current.lat,
+            current.lng
+        );
+
+    showNavigationMessage(
+        '🔄 در حال اصلاح مسیر...',
+        2500
+    );
+
+    calculateLiveRoute(false);
 
 }
 
@@ -2707,6 +3255,10 @@ function stopLiveRoute(){
     liveDestination=null;
 
     lastRoutePosition=null;
+
+    lastRouteGeometry=null;
+
+    offRouteCount=0;
 
     isRoutingRequestRunning=false;
 
@@ -2747,13 +3299,16 @@ function startDrawPolygon(){
 
 function editDrawnFeatures(){
 
-    if(drawnItems.getLayers().length===0){
+    if(
+        drawnItems.getLayers().length===0
+    ){
 
         alert(
             'عارضه‌ای برای ویرایش وجود ندارد.'
         );
 
         return;
+
     }
 
     new L.EditToolbar.Edit(
@@ -2767,13 +3322,16 @@ function editDrawnFeatures(){
 
 function deleteDrawnFeatures(){
 
-    if(drawnItems.getLayers().length===0){
+    if(
+        drawnItems.getLayers().length===0
+    ){
 
         alert(
             'عارضه‌ای برای حذف وجود ندارد.'
         );
 
         return;
+
     }
 
     new L.EditToolbar.Delete(
@@ -2904,15 +3462,9 @@ groupControl.onAdd=function(){
         'id="locationSubmenu" '+
         'class="group-submenu">'+
 
-        /*
-           فقط پایان مسیر باقی مانده
-        */
-
         '<button id="stopLiveRouteButton2">'+
         '⛔ پایان مسیر'+
         '</button>'+
-
-     
 
         '</div>'+
 
@@ -3000,9 +3552,10 @@ document.getElementById(
     'groupMainButton'
 ).onclick=function(){
 
-    var menu=document.getElementById(
-        'groupMenu'
-    );
+    var menu=
+        document.getElementById(
+            'groupMenu'
+        );
 
     menu.classList.toggle('open');
 
@@ -3012,19 +3565,23 @@ document.getElementById(
     'locationCategoryButton'
 ).onclick=function(){
 
-    var submenu=document.getElementById(
-        'locationSubmenu'
-    );
+    var submenu=
+        document.getElementById(
+            'locationSubmenu'
+        );
 
-    var wasOpen=submenu.classList.contains(
-        'open'
-    );
+    var wasOpen=
+        submenu.classList.contains(
+            'open'
+        );
 
     closeSubmenus();
 
     if(!wasOpen){
 
-        submenu.classList.add('open');
+        submenu.classList.add(
+            'open'
+        );
 
     }
 
@@ -3034,19 +3591,23 @@ document.getElementById(
     'toolsCategoryButton'
 ).onclick=function(){
 
-    var submenu=document.getElementById(
-        'toolsSubmenu'
-    );
+    var submenu=
+        document.getElementById(
+            'toolsSubmenu'
+        );
 
-    var wasOpen=submenu.classList.contains(
-        'open'
-    );
+    var wasOpen=
+        submenu.classList.contains(
+            'open'
+        );
 
     closeSubmenus();
 
     if(!wasOpen){
 
-        submenu.classList.add('open');
+        submenu.classList.add(
+            'open'
+        );
 
     }
 
@@ -3063,10 +3624,6 @@ document.getElementById(
     stopLiveRoute();
 
 };
-
-/* ================================================= */
-/* لایه‌ها */
-/* ================================================= *
 
 /* ================================================= */
 /* ورود KMZ */
@@ -3088,7 +3645,8 @@ document.getElementById(
     'change',
     function(e){
 
-        var file=e.target.files[0];
+        var file=
+            e.target.files[0];
 
         importKMZFile(file);
 
