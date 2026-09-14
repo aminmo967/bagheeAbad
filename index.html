@@ -169,22 +169,6 @@ body {
 /* اطلاعات مسیر */
 /* ================================================= */
 
-.live-route-info {
-    position:absolute;
-    left:50%;
-    bottom:20px;
-    transform:translateX(-50%);
-    z-index:1000;
-    background:rgba(255,255,255,0.90);
-    border-radius:10px;
-    padding:10px 15px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
-    font-size:14px;
-    display:none;
-    direction:rtl;
-    text-align:center;
-}
-
 .route-info-label {
     background:transparent !important;
     border:0 !important;
@@ -270,7 +254,7 @@ body {
     display:flex;
     flex-direction:column;
     gap:6px;
-    margin-top:5px;
+    margin-top:45px !important;
     margin-right:5px;
 }
 
@@ -331,7 +315,7 @@ body {
 }
 
 .leaflet-control-measure {
-    display:block !important;
+    display:none !important;
 }
 
 .leaflet-draw {
@@ -381,8 +365,9 @@ body {
     }
 
     .map-side-control {
-        margin-right:5px;
-    }
+    margin-top:45px !important;
+    margin-right:5px;
+}
 
     .map-side-button {
         width:42px;
@@ -428,9 +413,6 @@ body {
 
 <div id="map"></div>
 
-<div id="liveRouteInfo"
-     class="live-route-info">
-</div>
 
 <div id="coordinateInfo"
      class="coordinate-info">
@@ -2260,9 +2242,7 @@ function clearCurrentRoute(){
 
     }
 
-    document.getElementById(
-        'liveRouteInfo'
-    ).style.display='none';
+
 
 }
 
@@ -2576,23 +2556,6 @@ function calculateLiveRoute(firstRoute){
             :
             '🚶 پیاده';
 
-        document.getElementById(
-            'liveRouteInfo'
-        ).innerHTML=
-
-            modeName+
-            '<br>'+
-            '📏 '+
-            distance.toFixed(2)+
-            ' کیلومتر'+
-            ' &nbsp; | &nbsp; '+
-            '⏱ '+
-            duration+
-            ' دقیقه';
-
-        document.getElementById(
-            'liveRouteInfo'
-        ).style.display='block';
 
         var coordinates=
             route.geometry.coordinates;
@@ -2949,9 +2912,7 @@ groupControl.onAdd=function(){
         '⛔ پایان مسیر'+
         '</button>'+
 
-        '<button id="layersButton2">'+
-        '🗂️ لایه‌ها'+
-        '</button>'+
+     
 
         '</div>'+
 
@@ -3105,23 +3066,7 @@ document.getElementById(
 
 /* ================================================= */
 /* لایه‌ها */
-/* ================================================= */
-
-document.getElementById(
-    'layersButton2'
-).onclick=function(){
-
-    var button=document.querySelector(
-        '.leaflet-control-layers-toggle'
-    );
-
-    if(button){
-
-        button.click();
-
-    }
-
-};
+/* ================================================= *
 
 /* ================================================= */
 /* ورود KMZ */
