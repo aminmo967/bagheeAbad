@@ -22,30 +22,29 @@
 
 <style>
 
-html,
-body {
+html,body{
     width:100%;
     height:100%;
     margin:0;
     padding:0;
 }
 
-#map {
+#map{
     width:100%;
     height:100vh;
 }
 
 /* ================================================= */
-/* کنترل اصلی */
+/* منوی اصلی */
 /* ================================================= */
 
-.group-control {
+.group-control{
     margin-left:8px !important;
     margin-top:5px !important;
     direction:ltr;
 }
 
-.group-main-button {
+.group-main-button{
     width:46px;
     height:46px;
     border:1px solid #999;
@@ -56,29 +55,29 @@ body {
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    box-shadow:0 2px 5px rgba(0,0,0,0.25);
+    box-shadow:0 2px 5px rgba(0,0,0,.25);
 }
 
-.group-main-button:active {
-    transform:scale(0.95);
+.group-main-button:active{
+    transform:scale(.95);
 }
 
-.group-menu {
+.group-menu{
     display:none;
     width:180px;
     margin-top:4px;
-    background:rgba(255,255,255,0.97);
+    background:rgba(255,255,255,.97);
     border-radius:9px;
     padding:4px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    box-shadow:0 2px 8px rgba(0,0,0,.3);
     box-sizing:border-box;
 }
 
-.group-menu.open {
+.group-menu.open{
     display:block;
 }
 
-.category-button {
+.category-button{
     width:100% !important;
     min-height:45px !important;
     border:0 !important;
@@ -93,20 +92,20 @@ body {
     font-weight:bold;
 }
 
-.category-button:active {
+.category-button:active{
     background:#eee !important;
 }
 
-.group-submenu {
+.group-submenu{
     display:none;
     margin:3px 0 5px 0;
 }
 
-.group-submenu.open {
+.group-submenu.open{
     display:block;
 }
 
-.group-submenu button {
+.group-submenu button{
     width:165px;
     min-height:40px;
     margin:2px 0 2px 5px;
@@ -120,19 +119,19 @@ body {
     border-radius:5px;
 }
 
-.group-submenu button:active {
+.group-submenu button:active{
     background:#ddd;
 }
 
-.kmz-file-input {
+.kmz-file-input{
     display:none;
 }
 
 /* ================================================= */
-/* موقعیت کاربر */
+/* GPS */
 /* ================================================= */
 
-.user-location-marker {
+.user-location-marker{
     position:relative;
     width:32px;
     height:32px;
@@ -141,17 +140,17 @@ body {
     justify-content:center;
 }
 
-.user-location-arrow {
+.user-location-arrow{
     width:0;
     height:0;
     border-left:9px solid transparent;
     border-right:9px solid transparent;
     border-bottom:25px solid #4285F4;
-    filter:drop-shadow(0px 1px 2px rgba(0,0,0,0.5));
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,.5));
     transform-origin:center center;
 }
 
-.user-location-dot {
+.user-location-dot{
     position:absolute;
     width:10px;
     height:10px;
@@ -160,22 +159,22 @@ body {
     box-shadow:0 0 0 2px #4285F4;
 }
 
-.user-accuracy {
-    background:rgba(66,133,244,0.12);
-    border:1px solid rgba(66,133,244,0.35);
+.user-accuracy{
+    background:rgba(66,133,244,.12);
+    border:1px solid rgba(66,133,244,.35);
 }
 
 /* ================================================= */
 /* اطلاعات مسیر */
 /* ================================================= */
 
-.route-info-label {
+.route-info-label{
     background:transparent !important;
     border:0 !important;
 }
 
-.route-info-box {
-    background:rgba(255,255,255,0.95);
+.route-info-box{
+    background:rgba(255,255,255,.95);
     border:2px solid #0066ff;
     border-radius:9px;
     padding:5px 8px;
@@ -186,21 +185,21 @@ body {
     white-space:nowrap;
     text-align:center;
     line-height:18px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.30);
+    box-shadow:0 2px 6px rgba(0,0,0,.30);
     direction:rtl;
 }
 
 /* ================================================= */
-/* پیام موقت ناوبری */
+/* پیام ناوبری */
 /* ================================================= */
 
-.navigation-message-label {
+.navigation-message-label{
     background:transparent !important;
     border:0 !important;
 }
 
-.navigation-message-box {
-    background:rgba(255,255,255,0.96);
+.navigation-message-box{
+    background:rgba(255,255,255,.96);
     border:2px solid #555;
     border-radius:8px;
     padding:5px 9px;
@@ -210,34 +209,34 @@ body {
     color:#222;
     white-space:nowrap;
     text-align:center;
-    box-shadow:0 2px 6px rgba(0,0,0,0.25);
+    box-shadow:0 2px 6px rgba(0,0,0,.25);
     direction:rtl;
 }
 
 /* ================================================= */
-/* Popup انتخاب مسیر */
+/* Popup مسیر */
 /* ================================================= */
 
-.routing-popup {
+.routing-popup{
     direction:rtl;
     text-align:center;
     font-family:Arial,sans-serif;
     min-width:190px;
 }
 
-.routing-popup-title {
+.routing-popup-title{
     font-size:14px;
     font-weight:bold;
     margin-bottom:8px;
 }
 
-.routing-popup-buttons {
+.routing-popup-buttons{
     display:flex;
     gap:7px;
     justify-content:center;
 }
 
-.routing-popup-button {
+.routing-popup-button{
     border:0;
     border-radius:7px;
     padding:9px 12px;
@@ -247,23 +246,23 @@ body {
     min-width:75px;
 }
 
-.routing-popup-button:active {
-    transform:scale(0.96);
+.routing-popup-button:active{
+    transform:scale(.96);
 }
 
-.routing-car {
+.routing-car{
     background:#e8f0fe;
 }
 
-.routing-foot {
+.routing-foot{
     background:#e8f5e9;
 }
 
 /* ================================================= */
-/* اطلاعات KMZ */
+/* KMZ */
 /* ================================================= */
 
-.kmz-info {
+.kmz-info{
     direction:rtl;
     text-align:right;
     font-family:Arial;
@@ -274,7 +273,7 @@ body {
 /* دکمه‌های سمت راست */
 /* ================================================= */
 
-.map-side-control {
+.map-side-control{
     display:flex;
     flex-direction:column;
     gap:6px;
@@ -282,41 +281,41 @@ body {
     margin-right:5px;
 }
 
-.map-side-button {
+.map-side-button{
     width:44px;
     height:44px;
     border:1px solid #999;
     border-radius:9px;
-    background:rgba(255,255,255,0.94);
+    background:rgba(255,255,255,.94);
     font-size:21px;
     display:flex;
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    box-shadow:0 2px 5px rgba(0,0,0,0.25);
+    box-shadow:0 2px 5px rgba(0,0,0,.25);
     padding:0;
 }
 
-.map-side-button:active {
-    transform:scale(0.94);
+.map-side-button:active{
+    transform:scale(.94);
     background:#eee;
 }
 
 /* ================================================= */
-/* کادر مختصات */
+/* مختصات */
 /* ================================================= */
 
-.coordinate-info {
+.coordinate-info{
     position:absolute;
     right:8px;
     bottom:8px;
     z-index:1000;
     min-width:165px;
-    background:rgba(255,255,255,0.72);
-    border:1px solid rgba(120,120,120,0.45);
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(120,120,120,.45);
     border-radius:8px;
     padding:6px 9px;
-    box-shadow:0 1px 5px rgba(0,0,0,0.20);
+    box-shadow:0 1px 5px rgba(0,0,0,.20);
     direction:ltr;
     text-align:left;
     font-family:Arial,sans-serif;
@@ -326,31 +325,61 @@ body {
     backdrop-filter:blur(2px);
 }
 
-.coordinate-row {
+.coordinate-row{
     white-space:nowrap;
 }
 
-.coordinate-label {
+.coordinate-label{
     font-weight:bold;
 }
 
-.coordinate-value {
+.coordinate-value{
     font-family:monospace;
 }
 
-.leaflet-control-measure {
+/* ================================================= */
+/* اندازه‌گیری - اصلاح شده */
+/* ================================================= */
+
+/*
+   خود کنترل اندازه‌گیری نباید مخفی شود.
+   فقط دکمه اصلی آن از صفحه خارج می‌شود،
+   چون دکمه اختصاصی 📏 خودمان آن را باز می‌کند.
+*/
+
+.leaflet-control-measure{
+    max-width:280px;
+    z-index:10000 !important;
+}
+
+/* دکمه اصلی پلاگین مخفی ولی فعال باقی می‌ماند */
+
+.leaflet-control-measure-toggle{
+    position:absolute !important;
+    left:-10000px !important;
+    top:auto !important;
+}
+
+/* پنل اندازه‌گیری */
+
+.leaflet-control-measure-interaction{
+    font-size:13px;
+    direction:rtl;
+    text-align:right;
+    z-index:10001 !important;
+}
+
+/* ابزارهای پیش‌فرض */
+
+.leaflet-draw{
     display:none !important;
 }
 
-.leaflet-draw {
+.leaflet-control-layers{
     display:none !important;
 }
 
-.leaflet-control-layers {
-    display:none !important;
-}
-
-.leaflet-control {
+.leaflet-control{
     touch-action:manipulation;
 }
 
@@ -358,48 +387,48 @@ body {
 /* موبایل */
 /* ================================================= */
 
-@media(max-width:600px) {
+@media(max-width:600px){
 
-    .group-control {
+    .group-control{
         margin-left:5px !important;
         margin-top:5px !important;
     }
 
-    .group-main-button {
+    .group-main-button{
         width:44px;
         height:44px;
         font-size:19px;
     }
 
-    .group-menu {
+    .group-menu{
         width:180px;
         max-width:calc(100vw - 65px);
     }
 
-    .category-button {
+    .category-button{
         width:100% !important;
         min-height:44px !important;
         font-size:14px !important;
     }
 
-    .group-submenu button {
+    .group-submenu button{
         width:160px;
         min-height:40px;
         font-size:13px;
     }
 
-    .map-side-control {
+    .map-side-control{
         margin-top:45px !important;
         margin-right:5px;
     }
 
-    .map-side-button {
+    .map-side-button{
         width:42px;
         height:42px;
         font-size:20px;
     }
 
-    .coordinate-info {
+    .coordinate-info{
         right:6px;
         bottom:6px;
         min-width:145px;
@@ -408,21 +437,25 @@ body {
         padding:5px 7px;
     }
 
-    .route-info-box {
+    .route-info-box{
         font-size:11px;
         line-height:16px;
         padding:4px 7px;
     }
 
-    .routing-popup-button {
+    .routing-popup-button{
         min-width:70px;
         padding:9px 8px;
         font-size:12px;
     }
 
-    .navigation-message-box {
+    .navigation-message-box{
         font-size:11px;
         padding:4px 7px;
+    }
+
+    .leaflet-control-measure{
+        max-width:calc(100vw - 20px);
     }
 }
 
@@ -436,31 +469,26 @@ body {
 
 <div id="map"></div>
 
-<div id="coordinateInfo"
-     class="coordinate-info">
+<div id="coordinateInfo" class="coordinate-info">
 
     <div class="coordinate-row">
         <span class="coordinate-label">E:</span>
-        <span id="utmE"
-              class="coordinate-value">---</span>
+        <span id="utmE" class="coordinate-value">---</span>
     </div>
 
     <div class="coordinate-row">
         <span class="coordinate-label">N:</span>
-        <span id="utmN"
-              class="coordinate-value">---</span>
+        <span id="utmN" class="coordinate-value">---</span>
     </div>
 
     <div class="coordinate-row">
         <span class="coordinate-label">Zone:</span>
-        <span id="utmZone"
-              class="coordinate-value">---</span>
+        <span id="utmZone" class="coordinate-value">---</span>
     </div>
 
     <div class="coordinate-row">
         <span class="coordinate-label">Elev:</span>
-        <span id="elevation"
-              class="coordinate-value">---</span>
+        <span id="elevation" class="coordinate-value">---</span>
         <span> m</span>
     </div>
 
@@ -490,26 +518,26 @@ body {
 <script>
 
 /* ================================================= */
-/* نقشه */
+/* MAP */
 /* ================================================= */
 
-var map = L.map('map', {
+var map=L.map('map',{
     zoomControl:false,
     maxZoom:28,
     minZoom:1
 });
 
-var hash = new L.Hash(map);
+var hash=new L.Hash(map);
 
 L.control.zoom({
     position:'topleft'
 }).addTo(map);
 
 /* ================================================= */
-/* Google Satellite */
+/* SATELLITE */
 /* ================================================= */
 
-var satellite = L.tileLayer(
+var satellite=L.tileLayer(
     'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
     {
         maxZoom:28,
@@ -519,10 +547,10 @@ var satellite = L.tileLayer(
 ).addTo(map);
 
 /* ================================================= */
-/* Autolinker */
+/* AUTOLINKER */
 /* ================================================= */
 
-var autolinker = new Autolinker({
+var autolinker=new Autolinker({
     truncate:{
         length:30,
         location:'smart'
@@ -530,7 +558,7 @@ var autolinker = new Autolinker({
 });
 
 /* ================================================= */
-/* Popup */
+/* POPUP */
 /* ================================================= */
 
 function removeEmptyRowsFromPopupContent(content,feature){
@@ -547,7 +575,7 @@ function removeEmptyRowsFromPopupContent(content,feature){
             'td.visible-with-data'
         );
 
-        var key=td ? td.id : '';
+        var key=td?td.id:'';
 
         if(
             td &&
@@ -562,42 +590,38 @@ function removeEmptyRowsFromPopupContent(content,feature){
     }
 
     return tempDiv.innerHTML;
-
 }
 
 /* ================================================= */
-/* Lmt1400 */
+/* LMT */
 /* ================================================= */
 
 function pop_Lmt1400_3637_1(feature,layer){
 
-    var popupContent =
-        '<table>' +
-
-        '<tr><td>' +
+    var popupContent=
+        '<table>'+
+        '<tr><td>'+
         (
-            feature.properties['F_Class'] !== null
+            feature.properties['F_Class']!==null
             ?
             autolinker.link(
                 String(feature.properties['F_Class'])
             )
             :
             ''
-        ) +
-        '</td></tr>' +
-
-        '<tr><td>' +
+        )+
+        '</td></tr>'+
+        '<tr><td>'+
         (
-            feature.properties['L_Type'] !== null
+            feature.properties['L_Type']!==null
             ?
             autolinker.link(
                 String(feature.properties['L_Type'])
             )
             :
             ''
-        ) +
-        '</td></tr>' +
-
+        )+
+        '</td></tr>'+
         '</table>';
 
     layer.bindPopup(
@@ -613,26 +637,22 @@ function pop_Lmt1400_3637_1(feature,layer){
     layer.on(
         'click',
         function(e){
-
             L.DomEvent.stopPropagation(e);
-
         }
     );
-
 }
 
 function style_Lmt1400_3637_1_0(){
 
-    return {
+    return{
         color:'rgba(232,113,141,1.0)',
         weight:1,
         fillOpacity:0,
         interactive:true
     };
-
 }
 
-var layer_Lmt1400_3637_1 = new L.geoJson(
+var layer_Lmt1400_3637_1=new L.geoJson(
     json_Lmt1400_3637_1,
     {
         interactive:true,
@@ -642,38 +662,35 @@ var layer_Lmt1400_3637_1 = new L.geoJson(
 ).addTo(map);
 
 /* ================================================= */
-/* TXT1400 */
+/* TXT */
 /* ================================================= */
 
 function pop_TXT1400_3637_2(feature,layer){
 
-    var popupContent =
-        '<table>' +
-
-        '<tr><td>' +
+    var popupContent=
+        '<table>'+
+        '<tr><td>'+
         (
-            feature.properties['Name'] !== null
+            feature.properties['Name']!==null
             ?
             autolinker.link(
                 String(feature.properties['Name'])
             )
             :
             ''
-        ) +
-        '</td></tr>' +
-
-        '<tr><td>' +
+        )+
+        '</td></tr>'+
+        '<tr><td>'+
         (
-            feature.properties['Name_Class'] !== null
+            feature.properties['Name_Class']!==null
             ?
             autolinker.link(
                 String(feature.properties['Name_Class'])
             )
             :
             ''
-        ) +
-        '</td></tr>' +
-
+        )+
+        '</td></tr>'+
         '</table>';
 
     layer.bindPopup(
@@ -689,17 +706,14 @@ function pop_TXT1400_3637_2(feature,layer){
     layer.on(
         'click',
         function(e){
-
             L.DomEvent.stopPropagation(e);
-
         }
     );
-
 }
 
 function style_TXT1400_3637_2_0(){
 
-    return {
+    return{
         radius:4,
         color:'rgba(35,35,35,1.0)',
         weight:1,
@@ -708,10 +722,9 @@ function style_TXT1400_3637_2_0(){
         fillColor:'rgba(231,113,72,1.0)',
         interactive:true
     };
-
 }
 
-var layer_TXT1400_3637_2 = new L.geoJson(
+var layer_TXT1400_3637_2=new L.geoJson(
     json_TXT1400_3637_2,
     {
         interactive:true,
@@ -723,9 +736,7 @@ var layer_TXT1400_3637_2 = new L.geoJson(
                 latlng,
                 style_TXT1400_3637_2_0()
             );
-
         }
-
     }
 ).addTo(map);
 
@@ -733,7 +744,7 @@ var layer_TXT1400_3637_2 = new L.geoJson(
 /* اندازه‌گیری */
 /* ================================================= */
 
-var measureControl = new L.Control.Measure({
+var measureControl=new L.Control.Measure({
 
     position:'topright',
 
@@ -747,17 +758,19 @@ var measureControl = new L.Control.Measure({
 
     activeColor:'#ff0000',
 
-    completedColor:'#00a000'
+    completedColor:'#00a000',
+
+    captureZIndex:10000
 
 });
 
 measureControl.addTo(map);
 
 /* ================================================= */
-/* محدوده */
+/* BOUNDS */
 /* ================================================= */
 
-var bounds_group = new L.featureGroup([]);
+var bounds_group=new L.featureGroup([]);
 
 bounds_group.addLayer(
     layer_Lmt1400_3637_1
@@ -774,18 +787,16 @@ function setBounds(){
         map.fitBounds(
             bounds_group.getBounds()
         );
-
     }
-
 }
 
 setBounds();
 
 /* ================================================= */
-/* لایه‌ها */
+/* LAYERS */
 /* ================================================= */
 
-var overlaysTree = [
+var overlaysTree=[
 
     {
         label:
@@ -802,15 +813,13 @@ var overlaysTree = [
     },
 
     {
-        label:
-        'Google Satellite',
-        layer:
-        satellite
+        label:'Google Satellite',
+        layer:satellite
     }
 
 ];
 
-var layersControl = L.control.layers.tree(
+var layersControl=L.control.layers.tree(
     null,
     overlaysTree,
     {
@@ -824,19 +833,18 @@ layersControl.addTo(map);
 /* KMZ */
 /* ================================================= */
 
-var kmzLayer = L.geoJSON(
+var kmzLayer=L.geoJSON(
     null,
     {
 
         style:function(){
 
-            return {
+            return{
                 color:'#ff0000',
                 weight:3,
                 fillColor:'#ffff00',
-                fillOpacity:0.25
+                fillOpacity:.25
             };
-
         },
 
         pointToLayer:function(feature,latlng){
@@ -848,10 +856,9 @@ var kmzLayer = L.geoJSON(
                     color:'#ff0000',
                     weight:2,
                     fillColor:'#ffff00',
-                    fillOpacity:0.8
+                    fillOpacity:.8
                 }
             );
-
         },
 
         onEachFeature:function(feature,layer){
@@ -864,47 +871,37 @@ var kmzLayer = L.geoJSON(
             ){
 
                 name=feature.properties.name;
-
             }
 
             if(name){
 
                 layer.bindPopup(
-                    '<div class="kmz-info">' +
-                    '<b>نام:</b> ' +
-                    name +
+                    '<div class="kmz-info">'+
+                    '<b>نام:</b> '+
+                    name+
                     '</div>'
                 );
-
             }
 
             layer.on(
                 'click',
                 function(e){
-
                     L.DomEvent.stopPropagation(e);
-
                 }
             );
-
         }
-
     }
 ).addTo(map);
 
 /* ================================================= */
-/* عوارض رسم‌شده */
+/* DRAWN ITEMS */
 /* ================================================= */
 
-var drawnItems = new L.FeatureGroup();
+var drawnItems=new L.FeatureGroup();
 
 map.addLayer(drawnItems);
 
-/* ================================================= */
-/* ابزار رسم */
-/* ================================================= */
-
-var drawControl = new L.Control.Draw({
+var drawControl=new L.Control.Draw({
 
     position:'topleft',
 
@@ -924,7 +921,7 @@ var drawControl = new L.Control.Draw({
             shapeOptions:{
                 color:'#008000',
                 weight:3,
-                fillOpacity:0.25
+                fillOpacity:.25
             }
         },
 
@@ -935,18 +932,16 @@ var drawControl = new L.Control.Draw({
         marker:{
             icon:new L.Icon.Default()
         }
-
     },
 
     edit:{
         featureGroup:drawnItems,
         remove:true
     }
-
 });
 
 /* ================================================= */
-/* ایجاد عارضه */
+/* CREATED */
 /* ================================================= */
 
 map.on(
@@ -958,12 +953,11 @@ map.on(
         drawnItems.addLayer(layer);
 
         layer.bindPopup(
-            '<div class="kmz-info">' +
-            '<b>عارضه رسم‌شده</b><br>' +
-            'برای خروجی KMZ از بخش ابزارها استفاده کنید.' +
+            '<div class="kmz-info">'+
+            '<b>عارضه رسم‌شده</b><br>'+
+            'برای خروجی KMZ از بخش ابزارها استفاده کنید.'+
             '</div>'
         );
-
     }
 );
 
@@ -979,41 +973,38 @@ function escapeXml(value){
         .replace(/>/g,'&gt;')
         .replace(/"/g,'&quot;')
         .replace(/'/g,'&apos;');
-
 }
 
 /* ================================================= */
-/* GeoJSON → KML */
+/* GEOJSON TO KML */
 /* ================================================= */
 
 function geoJSONToKML(geojson){
 
-    var kml =
-        '<?xml version="1.0" encoding="UTF-8"?>' +
-        '<kml xmlns="http://www.opengis.net/kml/2.2">' +
-        '<Document>' +
+    var kml=
+        '<?xml version="1.0" encoding="UTF-8"?>'+
+        '<kml xmlns="http://www.opengis.net/kml/2.2">'+
+        '<Document>'+
         '<name>QGIS Web Map Export</name>';
 
-    var features=geojson.features || [];
+    var features=geojson.features||[];
 
     features.forEach(function(feature){
 
-        if(!feature.geometry){
-            return;
-        }
+        if(!feature.geometry)return;
 
-        var props=feature.properties || {};
+        var props=feature.properties||{};
 
-        var name =
-            props.name ||
-            props.Name ||
-            props.NAME ||
+        var name=
+            props.name||
+            props.Name||
+            props.NAME||
             'عارضه';
 
-        kml +=
-            '<Placemark>' +
-            '<name>' +
-            escapeXml(name) +
+        kml+=
+            '<Placemark>'+
+            '<name>'+
+            escapeXml(name)+
             '</name>';
 
         var geometry=feature.geometry;
@@ -1022,102 +1013,86 @@ function geoJSONToKML(geojson){
 
             var c=geometry.coordinates;
 
-            kml +=
-                '<Point>' +
-                '<coordinates>' +
-                c[0]+','+c[1]+',0' +
-                '</coordinates>' +
-                '</Point>';
-
+            kml+=
+                '<Point><coordinates>'+
+                c[0]+','+c[1]+',0'+
+                '</coordinates></Point>';
         }
 
         else if(geometry.type==='MultiPoint'){
 
             geometry.coordinates.forEach(function(c){
 
-                kml +=
-                    '<Point>' +
-                    '<coordinates>' +
-                    c[0]+','+c[1]+',0' +
-                    '</coordinates>' +
-                    '</Point>';
-
+                kml+=
+                    '<Point><coordinates>'+
+                    c[0]+','+c[1]+',0'+
+                    '</coordinates></Point>';
             });
-
         }
 
         else if(geometry.type==='LineString'){
 
-            kml +=
-                '<LineString>' +
-                '<tessellate>1</tessellate>' +
+            kml+=
+                '<LineString>'+
+                '<tessellate>1</tessellate>'+
                 '<coordinates>';
 
             geometry.coordinates.forEach(function(c){
 
-                kml += c[0]+','+c[1]+',0 ';
-
+                kml+=c[0]+','+c[1]+',0 ';
             });
 
-            kml +=
-                '</coordinates>' +
-                '</LineString>';
-
+            kml+='</coordinates></LineString>';
         }
 
         else if(geometry.type==='MultiLineString'){
 
             geometry.coordinates.forEach(function(line){
 
-                kml +=
-                    '<LineString>' +
-                    '<tessellate>1</tessellate>' +
+                kml+=
+                    '<LineString>'+
+                    '<tessellate>1</tessellate>'+
                     '<coordinates>';
 
                 line.forEach(function(c){
 
-                    kml += c[0]+','+c[1]+',0 ';
-
+                    kml+=c[0]+','+c[1]+',0 ';
                 });
 
-                kml +=
-                    '</coordinates>' +
+                kml+=
+                    '</coordinates>'+
                     '</LineString>';
-
             });
-
         }
 
         else if(geometry.type==='Polygon'){
 
-            kml +=
-                '<Polygon>' +
+            kml+=
+                '<Polygon>'+
                 '<tessellate>1</tessellate>';
 
             geometry.coordinates.forEach(
                 function(ring,index){
 
-                    kml +=
+                    kml+=
                         index===0
                         ?
                         '<outerBoundaryIs>'
                         :
                         '<innerBoundaryIs>';
 
-                    kml +=
-                        '<LinearRing>' +
+                    kml+=
+                        '<LinearRing>'+
                         '<coordinates>';
 
                     ring.forEach(function(c){
 
-                        kml += c[0]+','+c[1]+',0 ';
-
+                        kml+=c[0]+','+c[1]+',0 ';
                     });
 
-                    kml +=
-                        '</coordinates>' +
-                        '</LinearRing>' +
-
+                    kml+=
+                        '</coordinates>'+
+                        '</LinearRing>'+
                         (
                             index===0
                             ?
@@ -1125,45 +1100,41 @@ function geoJSONToKML(geojson){
                             :
                             '</innerBoundaryIs>'
                         );
-
                 }
             );
 
-            kml += '</Polygon>';
-
+            kml+='</Polygon>';
         }
 
         else if(geometry.type==='MultiPolygon'){
 
             geometry.coordinates.forEach(function(polygon){
 
-                kml +=
-                    '<Polygon>' +
+                kml+=
+                    '<Polygon>'+
                     '<tessellate>1</tessellate>';
 
                 polygon.forEach(function(ring,index){
 
-                    kml +=
+                    kml+=
                         index===0
                         ?
                         '<outerBoundaryIs>'
                         :
                         '<innerBoundaryIs>';
 
-                    kml +=
-                        '<LinearRing>' +
+                    kml+=
+                        '<LinearRing>'+
                         '<coordinates>';
 
                     ring.forEach(function(c){
 
-                        kml += c[0]+','+c[1]+',0 ';
-
+                        kml+=c[0]+','+c[1]+',0 ';
                     });
 
-                    kml +=
-                        '</coordinates>' +
-                        '</LinearRing>' +
-
+                    kml+=
+                        '</coordinates>'+
+                        '</LinearRing>'+
                         (
                             index===0
                             ?
@@ -1171,36 +1142,29 @@ function geoJSONToKML(geojson){
                             :
                             '</innerBoundaryIs>'
                         );
-
                 });
 
-                kml += '</Polygon>';
-
+                kml+='</Polygon>';
             });
-
         }
 
-        kml += '</Placemark>';
-
+        kml+='</Placemark>';
     });
 
-    kml +=
-        '</Document>' +
+    kml+=
+        '</Document>'+
         '</kml>';
 
     return kml;
-
 }
 
 /* ================================================= */
-/* ورود KMZ/KML */
+/* IMPORT KMZ/KML */
 /* ================================================= */
 
 function importKMZFile(file){
 
-    if(!file){
-        return;
-    }
+    if(!file)return;
 
     var fileName=file.name.toLowerCase();
 
@@ -1209,7 +1173,9 @@ function importKMZFile(file){
         !fileName.endsWith('.kml')
     ){
 
-        alert('لطفاً فایل KMZ یا KML انتخاب کنید.');
+        alert(
+            'لطفاً فایل KMZ یا KML انتخاب کنید.'
+        );
 
         return;
     }
@@ -1238,9 +1204,7 @@ function importKMZFile(file){
                         ){
 
                             kmlFile=zip.files[path];
-
                         }
-
                     }
                 );
 
@@ -1249,11 +1213,9 @@ function importKMZFile(file){
                     throw new Error(
                         'فایل KML داخل KMZ پیدا نشد.'
                     );
-
                 }
 
                 return kmlFile.async('text');
-
             })
 
             .then(function(kmlText){
@@ -1262,7 +1224,6 @@ function importKMZFile(file){
                     kmlText,
                     file.name
                 );
-
             })
 
             .catch(function(error){
@@ -1272,12 +1233,9 @@ function importKMZFile(file){
                 alert(
                     'خطا در خواندن فایل KMZ.'
                 );
-
             });
 
-        }
-
-        else{
+        }else{
 
             var decoder=new TextDecoder('utf-8');
 
@@ -1289,17 +1247,14 @@ function importKMZFile(file){
                 kmlText,
                 file.name
             );
-
         }
-
     };
 
     reader.readAsArrayBuffer(file);
-
 }
 
 /* ================================================= */
-/* KML → GeoJSON */
+/* PARSE KML */
 /* ================================================= */
 
 function parseKML(kmlText,fileName){
@@ -1342,33 +1297,28 @@ function parseKML(kmlText,fileName){
                     padding:[40,40]
                 }
             );
-
         }
 
         alert(
-            'فایل ' +
-            fileName +
-            ' با موفقیت وارد شد.\n' +
-            'تعداد عوارض: ' +
+            'فایل '+
+            fileName+
+            ' با موفقیت وارد شد.\n'+
+            'تعداد عوارض: '+
             geojson.features.length
         );
 
-    }
-
-    catch(error){
+    }catch(error){
 
         console.error(error);
 
         alert(
             'خطا در تبدیل KML به نقشه.'
         );
-
     }
-
 }
 
 /* ================================================= */
-/* خروجی */
+/* EXPORT */
 /* ================================================= */
 
 function collectExportGeoJSON(){
@@ -1382,9 +1332,7 @@ function collectExportGeoJSON(){
             features.push(
                 layer.feature
             );
-
         }
-
     });
 
     drawnItems.eachLayer(function(layer){
@@ -1396,27 +1344,22 @@ function collectExportGeoJSON(){
             if(!feature.properties){
 
                 feature.properties={};
-
             }
 
             if(!feature.properties.name){
 
                 feature.properties.name=
                     'عارضه رسم‌شده';
-
             }
 
             features.push(feature);
-
         }
-
     });
 
-    return {
+    return{
         type:'FeatureCollection',
         features:features
     };
-
 }
 
 function exportKMZ(){
@@ -1448,9 +1391,7 @@ function exportKMZ(){
         mimeType:
             'application/vnd.google-earth.kmz'
 
-    })
-
-    .then(function(blob){
+    }).then(function(blob){
 
         var url=URL.createObjectURL(blob);
 
@@ -1471,9 +1412,7 @@ function exportKMZ(){
             URL.revokeObjectURL(url);
 
         },1000);
-
     });
-
 }
 
 function clearKMZ(){
@@ -1501,86 +1440,34 @@ var lastElevationRequest=0;
 var currentElevation=null;
 
 /* ================================================= */
-/* متغیرهای مسیریابی هوشمند */
+/* ROUTING VARIABLES */
 /* ================================================= */
 
 var liveRouteLayer=null;
-
 var liveDestinationMarker=null;
-
 var liveDestination=null;
-
 var liveRoutingMode=null;
-
 var liveRouteActive=false;
-
-/* آخرین موقعیت استفاده‌شده برای بررسی مسیر */
 var lastRoutePosition=null;
-
-/* هندسه آخرین مسیر */
 var lastRouteGeometry=null;
-
-/* کنترل درخواست */
 var isRoutingRequestRunning=false;
-
 var lastRouteRequestTime=0;
-
-/* اطلاعات روی خود مسیر */
 var routeInfoMarker=null;
-
-/* پیام‌های موقت ناوبری */
 var navigationMessageMarker=null;
-
 var navigationMessageTimer=null;
-
-/* تعداد دفعات تشخیص خروج از مسیر */
 var offRouteCount=0;
-
-/* آخرین دقت GPS */
 var currentGPSAccuracy=999;
 
 /* ================================================= */
-/* تنظیمات هوشمند مسیر */
+/* ROUTING SETTINGS */
 /* ================================================= */
 
-/*
-   حداقل جابه‌جایی برای بررسی مجدد
-   مسیر فعلی
-*/
 var ROUTE_UPDATE_DISTANCE=30;
-
-/*
-   اگر فاصله از خط مسیر از این مقدار بیشتر شود،
-   احتمال خروج از مسیر وجود دارد.
-*/
 var OFF_ROUTE_DISTANCE=25;
-
-/*
-   چند موقعیت متوالی باید خارج از مسیر باشند
-   تا مسیر دوباره محاسبه شود.
-*/
 var OFF_ROUTE_CONFIRMATIONS=3;
-
-/*
-   حداقل دقت GPS برای تصمیم‌گیری.
-   اگر accuracy بدتر از این مقدار باشد،
-   GPS را برای reroute معتبر نمی‌دانیم.
-*/
 var MAX_ACCEPTABLE_GPS_ACCURACY=30;
-
-/*
-   نزدیک مقصد
-*/
 var DESTINATION_NEAR_DISTANCE=50;
-
-/*
-   رسیدن به مقصد
-*/
 var DESTINATION_REACHED_DISTANCE=20;
-
-/*
-   فاصله زمانی حداقل بین دو درخواست مسیر
-*/
 var ROUTE_REQUEST_COOLDOWN=5000;
 
 /* ================================================= */
@@ -1591,70 +1478,43 @@ function latLonToUTM(lat,lon){
 
     var a=6378137.0;
     var eccSquared=0.00669438;
-    var k0=0.9996;
+    var k0=.9996;
 
     var LongOrigin;
     var eccPrimeSquared;
-
     var N,T,C,A,M;
 
-    var LatRad=lat*Math.PI/180.0;
-    var LongRad=lon*Math.PI/180.0;
+    var LatRad=lat*Math.PI/180;
+    var LongRad=lon*Math.PI/180;
 
     var ZoneNumber=
         Math.floor((lon+180)/6)+1;
 
     if(
-        lat>=56.0 &&
-        lat<64.0 &&
-        lon>=3.0 &&
-        lon<12.0
+        lat>=56 &&
+        lat<64 &&
+        lon>=3 &&
+        lon<12
     ){
-
         ZoneNumber=32;
-
     }
 
-    if(
-        lat>=72.0 &&
-        lat<84.0
-    ){
+    if(lat>=72 && lat<84){
 
-        if(lon>=0 && lon<9){
-
-            ZoneNumber=31;
-
-        }
-
-        else if(lon>=9 && lon<21){
-
-            ZoneNumber=33;
-
-        }
-
-        else if(lon>=21 && lon<33){
-
-            ZoneNumber=35;
-
-        }
-
-        else if(lon>=33 && lon<42){
-
-            ZoneNumber=37;
-
-        }
-
+        if(lon>=0 && lon<9)ZoneNumber=31;
+        else if(lon>=9 && lon<21)ZoneNumber=33;
+        else if(lon>=21 && lon<33)ZoneNumber=35;
+        else if(lon>=33 && lon<42)ZoneNumber=37;
     }
 
     LongOrigin=
         (ZoneNumber-1)*6-180+3;
 
     var LongOriginRad=
-        LongOrigin*Math.PI/180.0;
+        LongOrigin*Math.PI/180;
 
     eccPrimeSquared=
-        eccSquared/
-        (1-eccSquared);
+        eccSquared/(1-eccSquared);
 
     N=
         a/
@@ -1676,9 +1536,7 @@ function latLonToUTM(lat,lon){
 
     A=
         Math.cos(LatRad)*
-        (
-            LongRad-LongOriginRad
-        );
+        (LongRad-LongOriginRad);
 
     M=
         a*
@@ -1687,91 +1545,64 @@ function latLonToUTM(lat,lon){
              3*eccSquared*eccSquared/64-
              5*eccSquared*eccSquared*eccSquared/256)
             *LatRad
-
             -
-
             (3*eccSquared/8+
              3*eccSquared*eccSquared/32+
              45*eccSquared*eccSquared*eccSquared/1024)
             *Math.sin(2*LatRad)
-
             +
-
             (15*eccSquared*eccSquared/256+
              45*eccSquared*eccSquared*eccSquared/1024)
             *Math.sin(4*LatRad)
-
             -
-
             (35*eccSquared*eccSquared*eccSquared/3072)
             *Math.sin(6*LatRad)
         );
 
     var UTMEasting=
+        k0*N*
         (
-            k0*N*
-            (
-                A+
-                (1-T+C)*A*A*A/6+
-                (5-18*T+T*T+
-                 72*C-
-                 58*eccPrimeSquared)
-                *A*A*A*A*A/120
-            )
-            +
-            500000.0
-        );
+            A+
+            (1-T+C)*A*A*A/6+
+            (5-18*T+T*T+
+             72*C-
+             58*eccPrimeSquared)
+            *A*A*A*A*A/120
+        )+
+        500000;
 
     var UTMNorthing=
+        k0*
         (
-            k0*
+            M+
+            N*Math.tan(LatRad)*
             (
-                M+
-                N*
-                Math.tan(LatRad)
-                *
-                (
-                    A*A/2+
-                    (5-T+9*C+
-                     4*C*C)
-                    *A*A*A*A/24+
-                    (61-58*T+
-                     T*T+
-                     600*C-
-                     330*eccPrimeSquared)
-                    *A*A*A*A*A*A/720
-                )
+                A*A/2+
+                (5-T+9*C+4*C*C)
+                *A*A*A*A/24+
+                (61-58*T+T*T+
+                 600*C-
+                 330*eccPrimeSquared)
+                *A*A*A*A*A*A/720
             )
         );
 
     if(lat<0){
 
-        UTMNorthing+=10000000.0;
-
+        UTMNorthing+=10000000;
     }
 
-    var hemisphere=
-        lat>=0
-        ?
-        'N'
-        :
-        'S';
-
-    return {
-
+    return{
         easting:UTMEasting,
-
         northing:UTMNorthing,
-
-        zone:ZoneNumber+
-             hemisphere
-
+        zone:
+            ZoneNumber+
+            (lat>=0?'N':'S')
     };
-
 }
 
 /* ================================================= */
-/* مختصات */
+/* COORDINATES */
 /* ================================================= */
 
 function updateCoordinateInfo(lat,lon,elevation){
@@ -1779,31 +1610,18 @@ function updateCoordinateInfo(lat,lon,elevation){
     if(
         typeof lat!=='number' ||
         typeof lon!=='number'
-    ){
+    )return;
 
-        return;
+    var utm=latLonToUTM(lat,lon);
 
-    }
+    document.getElementById('utmE')
+        .textContent=utm.easting.toFixed(2);
 
-    var utm=latLonToUTM(
-        lat,
-        lon
-    );
+    document.getElementById('utmN')
+        .textContent=utm.northing.toFixed(2);
 
-    document.getElementById(
-        'utmE'
-    ).textContent=
-        utm.easting.toFixed(2);
-
-    document.getElementById(
-        'utmN'
-    ).textContent=
-        utm.northing.toFixed(2);
-
-    document.getElementById(
-        'utmZone'
-    ).textContent=
-        utm.zone;
+    document.getElementById('utmZone')
+        .textContent=utm.zone;
 
     if(
         elevation!==null &&
@@ -1811,17 +1629,14 @@ function updateCoordinateInfo(lat,lon,elevation){
         !isNaN(elevation)
     ){
 
-        document.getElementById(
-            'elevation'
-        ).textContent=
+        document.getElementById('elevation')
+            .textContent=
             Number(elevation).toFixed(1);
-
     }
-
 }
 
 /* ================================================= */
-/* ارتفاع */
+/* ELEVATION */
 /* ================================================= */
 
 function getElevationFromService(lat,lon){
@@ -1830,11 +1645,7 @@ function getElevationFromService(lat,lon){
 
     if(
         now-lastElevationRequest<30000
-    ){
-
-        return;
-
-    }
+    )return;
 
     lastElevationRequest=now;
 
@@ -1842,22 +1653,17 @@ function getElevationFromService(lat,lon){
         'https://api.open-elevation.com/api/v1/lookup?locations='+
         lat+','+lon
     )
-
     .then(function(response){
 
         if(!response.ok){
 
             throw new Error(
-                'Elevation HTTP '+
-                response.status
+                'Elevation HTTP '+response.status
             );
-
         }
 
         return response.json();
-
     })
-
     .then(function(data){
 
         if(
@@ -1882,36 +1688,28 @@ function getElevationFromService(lat,lon){
                     lon,
                     currentElevation
                 );
-
             }
-
         }
-
     })
-
     .catch(function(error){
 
         console.log(
             'Elevation error:',
             error
         );
-
     });
-
 }
 
 /* ================================================= */
-/* Bearing */
+/* BEARING */
 /* ================================================= */
 
 function calculateBearing(
-    lat1,
-    lon1,
-    lat2,
-    lon2
+    lat1,lon1,lat2,lon2
 ){
 
-    var dLon=(lon2-lon1)*Math.PI/180;
+    var dLon=
+        (lon2-lon1)*Math.PI/180;
 
     var y=
         Math.sin(dLon)*
@@ -1925,47 +1723,36 @@ function calculateBearing(
         Math.cos(lat2*Math.PI/180)*
         Math.cos(dLon);
 
-    var bearing=
-        Math.atan2(y,x)*
-        180/Math.PI;
-
-    return (bearing+360)%360;
-
+    return(
+        Math.atan2(y,x)*180/Math.PI+
+        360
+    )%360;
 }
 
 /* ================================================= */
-/* آیکون کاربر */
+/* USER ICON */
 /* ================================================= */
 
 function createUserIcon(heading){
-
-    var html=
-        '<div class="user-location-marker">' +
-
-        '<div class="user-location-arrow" ' +
-        'style="transform:rotate('+heading+'deg)">' +
-        '</div>' +
-
-        '<div class="user-location-dot"></div>' +
-
-        '</div>';
 
     return L.divIcon({
 
         className:'',
 
-        html:html,
+        html:
+            '<div class="user-location-marker">'+
+            '<div class="user-location-arrow" '+
+            'style="transform:rotate('+heading+'deg)"></div>'+
+            '<div class="user-location-dot"></div>'+
+            '</div>',
 
         iconSize:[32,32],
-
         iconAnchor:[16,16]
-
     });
-
 }
 
 /* ================================================= */
-/* GPS زنده */
+/* LIVE GPS */
 /* ================================================= */
 
 function startLiveLocation(){
@@ -1979,7 +1766,8 @@ function startLiveLocation(){
         return;
     }
 
-    watchID=navigator.geolocation.watchPosition(
+    watchID=
+        navigator.geolocation.watchPosition(
 
         function(position){
 
@@ -2008,18 +1796,12 @@ function startLiveLocation(){
                 currentElevation=
                     gpsAltitude;
 
-            }
-
-            if(
-                gpsAltitude===null ||
-                isNaN(gpsAltitude)
-            ){
+            }else{
 
                 getElevationFromService(
                     lat,
                     lng
                 );
-
             }
 
             updateCoordinateInfo(
@@ -2036,13 +1818,13 @@ function startLiveLocation(){
                 lastPosition
             ){
 
-                heading=calculateBearing(
-                    lastPosition.lat,
-                    lastPosition.lng,
-                    lat,
-                    lng
-                );
-
+                heading=
+                    calculateBearing(
+                        lastPosition.lat,
+                        lastPosition.lng,
+                        lat,
+                        lng
+                    );
             }
 
             if(
@@ -2051,7 +1833,6 @@ function startLiveLocation(){
             ){
 
                 heading=0;
-
             }
 
             if(userMarker){
@@ -2064,22 +1845,20 @@ function startLiveLocation(){
                     createUserIcon(heading)
                 );
 
-            }
+            }else{
 
-            else{
-
-                userMarker=L.marker(
-                    [lat,lng],
-                    {
-                        icon:createUserIcon(heading),
-                        zIndexOffset:1000
-                    }
-                ).addTo(map);
+                userMarker=
+                    L.marker(
+                        [lat,lng],
+                        {
+                            icon:createUserIcon(heading),
+                            zIndexOffset:1000
+                        }
+                    ).addTo(map);
 
                 userMarker.bindPopup(
                     '🎯 موقعیت فعلی شما'
                 );
-
             }
 
             if(accuracyCircle){
@@ -2092,29 +1871,24 @@ function startLiveLocation(){
                     accuracy
                 );
 
+            }else{
+
+                accuracyCircle=
+                    L.circle(
+                        [lat,lng],
+                        {
+                            radius:accuracy,
+                            className:'user-accuracy'
+                        }
+                    ).addTo(map);
             }
 
-            else{
-
-                accuracyCircle=L.circle(
-                    [lat,lng],
-                    {
-                        radius:accuracy,
-                        className:'user-accuracy'
-                    }
-                ).addTo(map);
-
-            }
-
-            map._userLocation=L.latLng(
-                lat,
-                lng
-            );
+            map._userLocation=
+                L.latLng(lat,lng);
 
             if(liveRouteActive){
 
                 updateLiveNavigation();
-
             }
 
             lastPosition={
@@ -2130,7 +1904,6 @@ function startLiveLocation(){
                 'GPS Error:',
                 error
             );
-
         },
 
         {
@@ -2138,15 +1911,13 @@ function startLiveLocation(){
             maximumAge:1000,
             timeout:10000
         }
-
     );
-
 }
 
 startLiveLocation();
 
 /* ================================================= */
-/* موقعیت من */
+/* MY LOCATION */
 /* ================================================= */
 
 function goToMyLocation(){
@@ -2164,11 +1935,10 @@ function goToMyLocation(){
         map._userLocation,
         18
     );
-
 }
 
 /* ================================================= */
-/* قطب‌نما */
+/* COMPASS */
 /* ================================================= */
 
 var compassHeading=0;
@@ -2180,9 +1950,7 @@ function updateCompassButton(){
             'compassButton'
         );
 
-    if(!button){
-        return;
-    }
+    if(!button)return;
 
     button.innerHTML='🧭';
 
@@ -2192,52 +1960,40 @@ function updateCompassButton(){
         'data-heading',
         Math.round(compassHeading)
     );
-
 }
 
 function startCompass(){
 
     if(
-        typeof DeviceOrientationEvent !==
-        'undefined' &&
-        typeof DeviceOrientationEvent.requestPermission ===
-        'function'
+        typeof DeviceOrientationEvent!=='undefined' &&
+        typeof DeviceOrientationEvent.requestPermission==='function'
     ){
 
         DeviceOrientationEvent
-        .requestPermission()
+            .requestPermission()
+            .then(function(permission){
 
-        .then(function(permission){
+                if(permission==='granted'){
 
-            if(permission==='granted'){
+                    window.addEventListener(
+                        'deviceorientation',
+                        handleOrientation,
+                        true
+                    );
 
-                window.addEventListener(
-                    'deviceorientation',
-                    handleOrientation,
-                    true
-                );
+                }else{
 
-            }
+                    alert(
+                        'اجازه دسترسی به جهت‌یابی داده نشد.'
+                    );
+                }
+            })
+            .catch(function(error){
 
-            else{
+                console.log(error);
+            });
 
-                alert(
-                    'اجازه دسترسی به جهت‌یابی داده نشد.'
-                );
-
-            }
-
-        })
-
-        .catch(function(error){
-
-            console.log(error);
-
-        });
-
-    }
-
-    else{
+    }else{
 
         window.addEventListener(
             'deviceorientationabsolute',
@@ -2250,9 +2006,7 @@ function startCompass(){
             handleOrientation,
             true
         );
-
     }
-
 }
 
 function handleOrientation(event){
@@ -2264,9 +2018,7 @@ function handleOrientation(event){
         event.alpha!==null
     ){
 
-        heading=
-            360-event.alpha;
-
+        heading=360-event.alpha;
     }
 
     if(
@@ -2276,76 +2028,51 @@ function handleOrientation(event){
 
         heading=
             event.webkitCompassHeading;
-
     }
 
     if(
         heading===null ||
         isNaN(heading)
-    ){
-
-        return;
-
-    }
+    )return;
 
     compassHeading=
         (heading+360)%360;
 
     updateCompassButton();
-
 }
 
 /* ================================================= */
-/* فاصله نقطه تا قطعه خط */
+/* DISTANCE POINT TO SEGMENT */
 /* ================================================= */
 
-function distancePointToSegment(
-    p,
-    a,
-    b
-){
+function distancePointToSegment(p,a,b){
 
     var latRad=
         p.lat*Math.PI/180;
 
-    var metersPerLat=
-        111320;
+    var metersPerLat=111320;
 
     var metersPerLng=
-        111320*
-        Math.cos(latRad);
+        111320*Math.cos(latRad);
 
-    var px=
-        p.lng*metersPerLng;
+    var px=p.lng*metersPerLng;
+    var py=p.lat*metersPerLat;
 
-    var py=
-        p.lat*metersPerLat;
+    var ax=a.lng*metersPerLng;
+    var ay=a.lat*metersPerLat;
 
-    var ax=
-        a.lng*metersPerLng;
-
-    var ay=
-        a.lat*metersPerLat;
-
-    var bx=
-        b.lng*metersPerLng;
-
-    var by=
-        b.lat*metersPerLat;
+    var bx=b.lng*metersPerLng;
+    var by=b.lat*metersPerLat;
 
     var dx=bx-ax;
     var dy=by-ay;
 
-    if(
-        dx===0 &&
-        dy===0
-    ){
+    if(dx===0 && dy===0){
 
         return Math.sqrt(
             Math.pow(px-ax,2)+
             Math.pow(py-ay,2)
         );
-
     }
 
     var t=
@@ -2358,26 +2085,19 @@ function distancePointToSegment(
             dy*dy
         );
 
-    t=Math.max(
-        0,
-        Math.min(1,t)
-    );
+    t=Math.max(0,Math.min(1,t));
 
-    var closestX=
-        ax+t*dx;
-
-    var closestY=
-        ay+t*dy;
+    var closestX=ax+t*dx;
+    var closestY=ay+t*dy;
 
     return Math.sqrt(
         Math.pow(px-closestX,2)+
         Math.pow(py-closestY,2)
     );
-
 }
 
 /* ================================================= */
-/* فاصله نقطه تا مسیر */
+/* DISTANCE TO ROUTE */
 /* ================================================= */
 
 function distanceFromGeoJSONRoute(
@@ -2391,14 +2111,12 @@ function distanceFromGeoJSONRoute(
     ){
 
         return Infinity;
-
     }
 
     var coordinates=
         geometry.coordinates;
 
-    var minimum=
-        Infinity;
+    var minimum=Infinity;
 
     for(
         var i=0;
@@ -2426,17 +2144,14 @@ function distanceFromGeoJSONRoute(
         if(distance<minimum){
 
             minimum=distance;
-
         }
-
     }
 
     return minimum;
-
 }
 
 /* ================================================= */
-/* پیام ناوبری */
+/* NAVIGATION MESSAGE */
 /* ================================================= */
 
 function showNavigationMessage(
@@ -2451,7 +2166,6 @@ function showNavigationMessage(
         );
 
         navigationMessageTimer=null;
-
     }
 
     if(navigationMessageMarker){
@@ -2461,24 +2175,15 @@ function showNavigationMessage(
         );
 
         navigationMessageMarker=null;
-
     }
 
-    if(!message){
-
-        return;
-
-    }
+    if(!message)return;
 
     var position=
-        map._userLocation ||
+        map._userLocation||
         liveDestination;
 
-    if(!position){
-
-        return;
-
-    }
+    if(!position)return;
 
     var icon=L.divIcon({
 
@@ -2491,9 +2196,7 @@ function showNavigationMessage(
             '</div>',
 
         iconSize:[160,38],
-
         iconAnchor:[80,50]
-
     });
 
     navigationMessageMarker=
@@ -2516,15 +2219,13 @@ function showNavigationMessage(
                 );
 
                 navigationMessageMarker=null;
-
             }
 
-        }, duration || 1800);
-
+        },duration||1800);
 }
 
 /* ================================================= */
-/* پاک کردن مسیر */
+/* CLEAR ROUTE */
 /* ================================================= */
 
 function clearCurrentRoute(){
@@ -2536,7 +2237,6 @@ function clearCurrentRoute(){
         );
 
         liveRouteLayer=null;
-
     }
 
     if(liveDestinationMarker){
@@ -2546,7 +2246,6 @@ function clearCurrentRoute(){
         );
 
         liveDestinationMarker=null;
-
     }
 
     if(routeInfoMarker){
@@ -2556,7 +2255,6 @@ function clearCurrentRoute(){
         );
 
         routeInfoMarker=null;
-
     }
 
     if(navigationMessageMarker){
@@ -2566,7 +2264,6 @@ function clearCurrentRoute(){
         );
 
         navigationMessageMarker=null;
-
     }
 
     if(navigationMessageTimer){
@@ -2576,19 +2273,15 @@ function clearCurrentRoute(){
         );
 
         navigationMessageTimer=null;
-
     }
 
     lastRouteGeometry=null;
-
     lastRoutePosition=null;
-
     offRouteCount=0;
-
 }
 
 /* ================================================= */
-/* انتخاب حالت مسیریابی */
+/* SELECT ROUTING MODE */
 /* ================================================= */
 
 function selectRoutingMode(mode){
@@ -2600,46 +2293,51 @@ function selectRoutingMode(mode){
         );
 
         return;
-
     }
 
-    if(!liveDestination){
-
-        return;
-
-    }
+    if(!liveDestination)return;
 
     liveRoutingMode=mode;
-
     liveRouteActive=true;
-
     lastRoutePosition=null;
-
     lastRouteGeometry=null;
-
     offRouteCount=0;
-
     isRoutingRequestRunning=false;
-
     lastRouteRequestTime=0;
 
     if(liveDestinationMarker){
 
         liveDestinationMarker.closePopup();
-
     }
 
     calculateLiveRoute(true);
-
 }
 
 /* ================================================= */
-/* انتخاب مقصد با لمس نقشه */
+/* MAP CLICK - DESTINATION */
 /* ================================================= */
 
 map.on(
     'click',
     function(e){
+
+        /*
+         * اگر ابزار اندازه‌گیری فعال است،
+         * این کلیک نباید مقصد مسیر شود.
+         */
+
+        var measureInteraction=
+            document.querySelector(
+                '.leaflet-control-measure-interaction'
+            );
+
+        if(
+            measureInteraction &&
+            measureInteraction.offsetParent!==null
+        ){
+
+            return;
+        }
 
         if(!map._userLocation){
 
@@ -2648,44 +2346,43 @@ map.on(
             );
 
             return;
-
         }
 
         liveRouteActive=false;
-
         liveRoutingMode=null;
 
         clearCurrentRoute();
 
         liveDestination=e.latlng;
 
-        liveDestinationMarker=L.marker(
-            liveDestination
-        ).addTo(map);
+        liveDestinationMarker=
+            L.marker(
+                liveDestination
+            ).addTo(map);
 
         liveDestinationMarker.bindPopup(
 
-            '<div class="routing-popup">' +
+            '<div class="routing-popup">'+
 
-            '<div class="routing-popup-title">' +
-            '🏁 انتخاب نوع مسیر' +
-            '</div>' +
+            '<div class="routing-popup-title">'+
+            '🏁 انتخاب نوع مسیر'+
+            '</div>'+
 
-            '<div class="routing-popup-buttons">' +
+            '<div class="routing-popup-buttons">'+
 
-            '<button ' +
-            'class="routing-popup-button routing-car" ' +
-            'onclick="selectRoutingMode(\'driving\')">' +
-            '🚗 خودرو' +
-            '</button>' +
+            '<button '+
+            'class="routing-popup-button routing-car" '+
+            'onclick="selectRoutingMode(\'driving\')">'+
+            '🚗 خودرو'+
+            '</button>'+
 
-            '<button ' +
-            'class="routing-popup-button routing-foot" ' +
-            'onclick="selectRoutingMode(\'foot\')">' +
-            '🚶 پیاده' +
-            '</button>' +
+            '<button '+
+            'class="routing-popup-button routing-foot" '+
+            'onclick="selectRoutingMode(\'foot\')">'+
+            '🚶 پیاده'+
+            '</button>'+
 
-            '</div>' +
+            '</div>'+
 
             '</div>',
 
@@ -2693,16 +2390,14 @@ map.on(
                 closeButton:true,
                 autoClose:false
             }
-
         );
 
         liveDestinationMarker.openPopup();
-
     }
 );
 
 /* ================================================= */
-/* محاسبه مسیر */
+/* CALCULATE ROUTE */
 /* ================================================= */
 
 function calculateLiveRoute(firstRoute){
@@ -2715,7 +2410,6 @@ function calculateLiveRoute(firstRoute){
     ){
 
         return;
-
     }
 
     var now=Date.now();
@@ -2727,13 +2421,7 @@ function calculateLiveRoute(firstRoute){
     ){
 
         return;
-
     }
-
-    /*
-       اگر GPS دقت کافی ندارد،
-       برای reroute اقدام نکن.
-    */
 
     if(
         !firstRoute &&
@@ -2742,58 +2430,44 @@ function calculateLiveRoute(firstRoute){
     ){
 
         return;
-
     }
 
     isRoutingRequestRunning=true;
-
     lastRouteRequestTime=now;
 
-    var start=
-        L.latLng(
-            map._userLocation.lat,
-            map._userLocation.lng
-        );
+    var start=L.latLng(
+        map._userLocation.lat,
+        map._userLocation.lng
+    );
 
-    var end=
-        liveDestination;
+    var end=liveDestination;
 
     var profile;
-
     var server;
 
-    if(
-        liveRoutingMode===
-        'driving'
-    ){
+    if(liveRoutingMode==='driving'){
 
         profile='driving';
 
         server=
             'https://routing.openstreetmap.de/routed-car';
 
-    }
-
-    else{
+    }else{
 
         profile='foot';
 
         server=
             'https://routing.openstreetmap.de/routed-foot';
-
     }
 
     var url=
         server+
         '/route/v1/'+
         profile+'/' +
-
         start.lng+','+
         start.lat+';'+
-
         end.lng+','+
         end.lat+
-
         '?overview=full&geometries=geojson';
 
     fetch(url)
@@ -2805,22 +2479,16 @@ function calculateLiveRoute(firstRoute){
             throw new Error(
                 'HTTP '+response.status
             );
-
         }
 
         return response.json();
-
     })
 
     .then(function(data){
 
         isRoutingRequestRunning=false;
 
-        if(!liveRouteActive){
-
-            return;
-
-        }
+        if(!liveRouteActive)return;
 
         if(
             !data.routes ||
@@ -2832,14 +2500,11 @@ function calculateLiveRoute(firstRoute){
             );
 
             return;
-
         }
 
-        var route=
-            data.routes[0];
+        var route=data.routes[0];
 
-        lastRouteGeometry=
-            route.geometry;
+        lastRouteGeometry=route.geometry;
 
         lastRoutePosition=
             L.latLng(
@@ -2856,7 +2521,6 @@ function calculateLiveRoute(firstRoute){
             );
 
             liveRouteLayer=null;
-
         }
 
         if(routeInfoMarker){
@@ -2866,21 +2530,18 @@ function calculateLiveRoute(firstRoute){
             );
 
             routeInfoMarker=null;
-
         }
 
-        liveRouteLayer=L.geoJSON(
-
-            route.geometry,
-
-            {
-                style:{
-                    weight:6,
-                    opacity:0.85
+        liveRouteLayer=
+            L.geoJSON(
+                route.geometry,
+                {
+                    style:{
+                        weight:6,
+                        opacity:.85
+                    }
                 }
-            }
-
-        ).addTo(map);
+            ).addTo(map);
 
         var distance=
             route.distance/1000;
@@ -2891,8 +2552,7 @@ function calculateLiveRoute(firstRoute){
             );
 
         var modeName=
-            liveRoutingMode===
-            'driving'
+            liveRoutingMode==='driving'
             ?
             '🚗 خودرو'
             :
@@ -2912,9 +2572,7 @@ function calculateLiveRoute(firstRoute){
                 );
 
             var middleCoordinate=
-                coordinates[
-                    middleIndex
-                ];
+                coordinates[middleIndex];
 
             var routeInfoIcon=
                 L.divIcon({
@@ -2923,85 +2581,52 @@ function calculateLiveRoute(firstRoute){
                         'route-info-label',
 
                     html:
-
                         '<div class="route-info-box">'+
-
                         modeName+
-
                         '<br>'+
-
                         '📏 '+
                         distance.toFixed(2)+
                         ' km'+
-
                         ' &nbsp; | &nbsp; '+
-
                         '⏱ '+
                         duration+
                         ' دقیقه'+
-
                         '</div>',
 
-                    iconSize:[
-                        150,
-                        58
-                    ],
-
-                    iconAnchor:[
-                        75,
-                        29
-                    ]
-
+                    iconSize:[150,58],
+                    iconAnchor:[75,29]
                 });
 
             routeInfoMarker=
                 L.marker(
-
                     [
                         middleCoordinate[1],
                         middleCoordinate[0]
                     ],
-
                     {
-                        icon:
-                            routeInfoIcon,
-
+                        icon:routeInfoIcon,
                         interactive:false,
-
                         zIndexOffset:1000
-
                     }
-
                 ).addTo(map);
-
         }
 
         if(firstRoute){
 
             map.fitBounds(
-
                 liveRouteLayer.getBounds(),
-
                 {
-                    padding:[
-                        50,
-                        50
-                    ]
+                    padding:[50,50]
                 }
-
             );
 
-        }
-
-        else{
+        }else{
 
             showNavigationMessage(
                 '✅ مسیر جدید محاسبه شد',
                 1800
             );
-
         }
-
     })
 
     .catch(function(error){
@@ -3016,18 +2641,15 @@ function calculateLiveRoute(firstRoute){
         if(firstRoute){
 
             alert(
-                'خطا در دریافت مسیر.\n' +
+                'خطا در دریافت مسیر.\n'+
                 'لطفاً دوباره امتحان کنید.'
             );
-
         }
-
     });
-
 }
 
 /* ================================================= */
-/* به‌روزرسانی هوشمند مسیر */
+/* LIVE NAVIGATION */
 /* ================================================= */
 
 function updateLiveNavigation(){
@@ -3039,15 +2661,10 @@ function updateLiveNavigation(){
     ){
 
         return;
-
     }
 
     var current=
         map._userLocation;
-
-    /* --------------------------------------------- */
-    /* فاصله تا مقصد */
-    /* --------------------------------------------- */
 
     var distanceToDestination=
         map.distance(
@@ -3055,9 +2672,7 @@ function updateLiveNavigation(){
             liveDestination
         );
 
-    /* --------------------------------------------- */
-    /* رسیدن به مقصد */
-    /* --------------------------------------------- */
+    /* رسیدن */
 
     if(
         distanceToDestination<=
@@ -3069,11 +2684,8 @@ function updateLiveNavigation(){
         if(liveRouteLayer){
 
             liveRouteLayer.setStyle({
-
-                opacity:0.45
-
+                opacity:.45
             });
-
         }
 
         if(routeInfoMarker){
@@ -3083,7 +2695,6 @@ function updateLiveNavigation(){
             );
 
             routeInfoMarker=null;
-
         }
 
         showNavigationMessage(
@@ -3092,12 +2703,9 @@ function updateLiveNavigation(){
         );
 
         return;
-
     }
 
-    /* --------------------------------------------- */
     /* نزدیک مقصد */
-    /* --------------------------------------------- */
 
     if(
         distanceToDestination<=
@@ -3108,24 +2716,18 @@ function updateLiveNavigation(){
             '📍 به مقصد نزدیک شدید',
             1800
         );
-
     }
 
-    /* --------------------------------------------- */
-    /* مسیر هنوز محاسبه نشده */
-    /* --------------------------------------------- */
+    /* مسیر وجود ندارد */
 
     if(!lastRouteGeometry){
 
         calculateLiveRoute(false);
 
         return;
-
     }
 
-    /* --------------------------------------------- */
-    /* GPS ضعیف */
-    /* --------------------------------------------- */
+    /* دقت GPS نامناسب */
 
     if(
         currentGPSAccuracy>
@@ -3133,12 +2735,9 @@ function updateLiveNavigation(){
     ){
 
         return;
-
     }
 
-    /* --------------------------------------------- */
-    /* آیا کاربر حداقل 30 متر جابه‌جا شده؟ */
-    /* --------------------------------------------- */
+    /* حرکت حداقل 30 متر */
 
     if(lastRoutePosition){
 
@@ -3154,14 +2753,10 @@ function updateLiveNavigation(){
         ){
 
             return;
-
         }
-
     }
 
-    /* --------------------------------------------- */
-    /* فاصله از خط مسیر */
-    /* --------------------------------------------- */
+    /* فاصله از مسیر */
 
     var distanceFromRoute=
         distanceFromGeoJSONRoute(
@@ -3169,9 +2764,7 @@ function updateLiveNavigation(){
             lastRouteGeometry
         );
 
-    /* --------------------------------------------- */
-    /* هنوز روی مسیر */
-    /* --------------------------------------------- */
+    /* روی مسیر */
 
     if(
         distanceFromRoute<=
@@ -3187,12 +2780,9 @@ function updateLiveNavigation(){
             );
 
         return;
-
     }
 
-    /* --------------------------------------------- */
-    /* احتمال خروج از مسیر */
-    /* --------------------------------------------- */
+    /* احتمال خروج */
 
     offRouteCount++;
 
@@ -3200,11 +2790,6 @@ function updateLiveNavigation(){
         '🔄 بررسی مسیر...',
         1200
     );
-
-    /*
-       هنوز زود است.
-       باید چند GPS متوالی خارج از مسیر باشند.
-    */
 
     if(
         offRouteCount<
@@ -3218,12 +2803,9 @@ function updateLiveNavigation(){
             );
 
         return;
-
     }
 
-    /* --------------------------------------------- */
-    /* خروج واقعی تأیید شد */
-    /* --------------------------------------------- */
+    /* خروج قطعی */
 
     offRouteCount=0;
 
@@ -3239,35 +2821,27 @@ function updateLiveNavigation(){
     );
 
     calculateLiveRoute(false);
-
 }
 
 /* ================================================= */
-/* پایان مسیر */
+/* STOP ROUTE */
 /* ================================================= */
 
 function stopLiveRoute(){
 
     liveRouteActive=false;
-
     liveRoutingMode=null;
-
     liveDestination=null;
-
     lastRoutePosition=null;
-
     lastRouteGeometry=null;
-
     offRouteCount=0;
-
     isRoutingRequestRunning=false;
 
     clearCurrentRoute();
-
 }
 
 /* ================================================= */
-/* رسم */
+/* DRAW FUNCTIONS */
 /* ================================================= */
 
 function startDrawMarker(){
@@ -3276,7 +2850,6 @@ function startDrawMarker(){
         map,
         drawControl.options.draw.marker
     ).enable();
-
 }
 
 function startDrawPolyline(){
@@ -3285,7 +2858,6 @@ function startDrawPolyline(){
         map,
         drawControl.options.draw.polyline
     ).enable();
-
 }
 
 function startDrawPolygon(){
@@ -3294,7 +2866,6 @@ function startDrawPolygon(){
         map,
         drawControl.options.draw.polygon
     ).enable();
-
 }
 
 function editDrawnFeatures(){
@@ -3308,7 +2879,6 @@ function editDrawnFeatures(){
         );
 
         return;
-
     }
 
     new L.EditToolbar.Edit(
@@ -3317,7 +2887,6 @@ function editDrawnFeatures(){
             featureGroup:drawnItems
         }
     ).enable();
-
 }
 
 function deleteDrawnFeatures(){
@@ -3331,7 +2900,6 @@ function deleteDrawnFeatures(){
         );
 
         return;
-
     }
 
     new L.EditToolbar.Delete(
@@ -3340,11 +2908,10 @@ function deleteDrawnFeatures(){
             featureGroup:drawnItems
         }
     ).enable();
-
 }
 
 /* ================================================= */
-/* کنترل سمت راست */
+/* RIGHT CONTROL */
 /* ================================================= */
 
 var mapSideControl=L.control({
@@ -3384,13 +2951,12 @@ mapSideControl.onAdd=function(){
     L.DomEvent.disableClickPropagation(div);
 
     return div;
-
 };
 
 mapSideControl.addTo(map);
 
 /* ================================================= */
-/* دکمه‌های سمت راست */
+/* RIGHT BUTTONS */
 /* ================================================= */
 
 document.getElementById(
@@ -3398,7 +2964,6 @@ document.getElementById(
 ).onclick=function(){
 
     startCompass();
-
 };
 
 document.getElementById(
@@ -3406,8 +2971,11 @@ document.getElementById(
 ).onclick=function(){
 
     goToMyLocation();
-
 };
+
+/*
+ * دکمه اختصاصی اندازه‌گیری
+ */
 
 document.getElementById(
     'measureSideButton'
@@ -3418,16 +2986,20 @@ document.getElementById(
             '.leaflet-control-measure-toggle'
         );
 
-    if(button){
+    if(!button){
 
-        button.click();
+        alert(
+            'ابزار اندازه‌گیری بارگذاری نشده است.'
+        );
 
+        return;
     }
 
+    button.click();
 };
 
 /* ================================================= */
-/* منوی اصلی */
+/* MAIN MENU */
 /* ================================================= */
 
 var groupControl=L.control({
@@ -3527,13 +3099,12 @@ groupControl.onAdd=function(){
     L.DomEvent.disableClickPropagation(div);
 
     return div;
-
 };
 
 groupControl.addTo(map);
 
 /* ================================================= */
-/* توابع منو */
+/* MENU FUNCTIONS */
 /* ================================================= */
 
 function closeSubmenus(){
@@ -3543,9 +3114,7 @@ function closeSubmenus(){
     ).forEach(function(el){
 
         el.classList.remove('open');
-
     });
-
 }
 
 document.getElementById(
@@ -3558,7 +3127,6 @@ document.getElementById(
         );
 
     menu.classList.toggle('open');
-
 };
 
 document.getElementById(
@@ -3571,20 +3139,14 @@ document.getElementById(
         );
 
     var wasOpen=
-        submenu.classList.contains(
-            'open'
-        );
+        submenu.classList.contains('open');
 
     closeSubmenus();
 
     if(!wasOpen){
 
-        submenu.classList.add(
-            'open'
-        );
-
+        submenu.classList.add('open');
     }
-
 };
 
 document.getElementById(
@@ -3597,24 +3159,18 @@ document.getElementById(
         );
 
     var wasOpen=
-        submenu.classList.contains(
-            'open'
-        );
+        submenu.classList.contains('open');
 
     closeSubmenus();
 
     if(!wasOpen){
 
-        submenu.classList.add(
-            'open'
-        );
-
+        submenu.classList.add('open');
     }
-
 };
 
 /* ================================================= */
-/* پایان مسیر */
+/* STOP ROUTE */
 /* ================================================= */
 
 document.getElementById(
@@ -3622,11 +3178,10 @@ document.getElementById(
 ).onclick=function(){
 
     stopLiveRoute();
-
 };
 
 /* ================================================= */
-/* ورود KMZ */
+/* IMPORT */
 /* ================================================= */
 
 document.getElementById(
@@ -3636,7 +3191,6 @@ document.getElementById(
     document.getElementById(
         'kmzFileInput'
     ).click();
-
 };
 
 document.getElementById(
@@ -3651,12 +3205,11 @@ document.getElementById(
         importKMZFile(file);
 
         e.target.value='';
-
     }
 );
 
 /* ================================================= */
-/* خروجی KMZ */
+/* EXPORT */
 /* ================================================= */
 
 document.getElementById(
@@ -3664,11 +3217,10 @@ document.getElementById(
 ).onclick=function(){
 
     exportKMZ();
-
 };
 
 /* ================================================= */
-/* پاک کردن KMZ */
+/* CLEAR KMZ */
 /* ================================================= */
 
 document.getElementById(
@@ -3682,13 +3234,11 @@ document.getElementById(
     ){
 
         clearKMZ();
-
     }
-
 };
 
 /* ================================================= */
-/* رسم نقطه */
+/* DRAW MARKER */
 /* ================================================= */
 
 document.getElementById(
@@ -3696,11 +3246,10 @@ document.getElementById(
 ).onclick=function(){
 
     startDrawMarker();
-
 };
 
 /* ================================================= */
-/* رسم خط */
+/* DRAW LINE */
 /* ================================================= */
 
 document.getElementById(
@@ -3708,11 +3257,10 @@ document.getElementById(
 ).onclick=function(){
 
     startDrawPolyline();
-
 };
 
 /* ================================================= */
-/* رسم پلیگون */
+/* DRAW POLYGON */
 /* ================================================= */
 
 document.getElementById(
@@ -3720,11 +3268,10 @@ document.getElementById(
 ).onclick=function(){
 
     startDrawPolygon();
-
 };
 
 /* ================================================= */
-/* ویرایش */
+/* EDIT */
 /* ================================================= */
 
 document.getElementById(
@@ -3732,11 +3279,10 @@ document.getElementById(
 ).onclick=function(){
 
     editDrawnFeatures();
-
 };
 
 /* ================================================= */
-/* حذف انتخابی */
+/* DELETE */
 /* ================================================= */
 
 document.getElementById(
@@ -3744,11 +3290,10 @@ document.getElementById(
 ).onclick=function(){
 
     deleteDrawnFeatures();
-
 };
 
 /* ================================================= */
-/* پاک کردن همه */
+/* CLEAR DRAW */
 /* ================================================= */
 
 document.getElementById(
@@ -3762,9 +3307,7 @@ document.getElementById(
     ){
 
         clearDrawnFeatures();
-
     }
-
 };
 
 </script>
