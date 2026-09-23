@@ -17,8 +17,9 @@
 <link rel="stylesheet" href="css/fontawesome-all.min.css">
 <link rel="stylesheet" href="css/leaflet-measure.css">
 
+<!-- Leaflet-Geoman -->
 <link rel="stylesheet"
-      href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css">
+      href="https://unpkg.com/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css">
 
 <style>
 
@@ -244,12 +245,6 @@ body{
     z-index:10001 !important;
 }
 
-/* ابزار Draw پیش‌فرض مخفی */
-.leaflet-draw{
-    display:none !important;
-}
-
-/* لایه‌ها کنترل پیش‌فرض مخفی */
 .leaflet-control-layers{
     display:none !important;
 }
@@ -258,7 +253,28 @@ body{
     touch-action:manipulation;
 }
 
+/* ================================================= */
+/* Geoman */
+/* ================================================= */
+
+.leaflet-pm-toolbar{
+    display:none !important;
+}
+
+.leaflet-pm-action{
+    touch-action:manipulation;
+}
+
+.leaflet-pm-tooltip{
+    direction:rtl;
+    font-family:Arial,sans-serif;
+    font-size:12px;
+}
+
+/* ================================================= */
 /* اندازه‌گیری در پایین راست */
+/* ================================================= */
+
 .leaflet-bottom .leaflet-control-measure{
     margin-right:8px !important;
     margin-bottom:8px !important;
@@ -401,6 +417,10 @@ body{
         margin-right:6px !important;
         margin-bottom:8px !important;
     }
+
+    .leaflet-pm-tooltip{
+        font-size:11px;
+    }
 }
 
 </style>
@@ -454,7 +474,8 @@ body{
 
 <script src="https://unpkg.com/@tmcw/togeojson@5.8.1/dist/togeojson.umd.js"></script>
 
-<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<!-- Leaflet-Geoman -->
+<script src="https://unpkg.com/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.min.js"></script>
 
 <script src="data/Lmt1400_3637_1.js"></script>
 <script src="data/TXT1400_3637_2.js"></script>
@@ -838,122 +859,169 @@ var kmzLayer=L.geoJSON(
 ).addTo(map);
 
 /* ================================================= */
-/* DRAW */
+/* GEOMAN DRAW */
 /* ================================================= */
 
 var drawnItems=new L.FeatureGroup();
 
 map.addLayer(drawnItems);
 
-var drawControl=new L.Control.Draw({
+/*
+ * حالت‌های سفارشی
+ */
 
-    position:'topleft',
+var geomanDrawActive=false;
+var geomanEditActive=false;
+var geomanRemovalActive=false;
 
-    draw:{
+/*
+ * تنظیمات عمومی Geoman
+ */
 
-        polyline:{
-            shapeOptions:{
-                color:'#0066ff',
-                weight:4
-            }
-        },
+if(map.pm){
 
-        polygon:{
-            allowIntersection:false,
-            showArea:true,
+    map.pm.setGlobalOptions({
 
-            shapeOptions:{
-                color:'#008000',
-                weight:3,
-                fillOpacity:.25
-            }
-        },
+        snappable:true,
 
-        rectangle:false,
-        circle:false,
-        circlemarker:false,
+        snapDistance:20,
 
-        marker:{
-            icon:new L.Icon.Default()
-        }
-    },
+        allowSelfIntersection:false
 
-    edit:{
-        featureGroup:drawnItems,
-        remove:true
+    });
+
+}
+
+/* ================================================= */
+/* STOP GEOMAN MODES */
+/* ================================================= */
+
+function stopGeomanModes(){
+
+    geomanDrawActive=false;
+    geomanEditActive=false;
+    geomanRemovalActive=false;
+
+    if(!map.pm){
+        return;
     }
-});
 
-var activeDrawHandler=null;
+    try{
+        map.pm.disableDraw();
+    }catch(error){}
 
-function stopActiveDraw(){
+    /*
+     * تمام لایه‌های رسم‌شده را از حالت ویرایش خارج می‌کنیم
+     */
 
-    if(activeDrawHandler){
+    drawnItems.eachLayer(function(layer){
 
-        try{
+        if(
+            layer.pm &&
+            layer.pm.enabled()
+        ){
 
-            activeDrawHandler.disable();
+            try{
+                layer.pm.disable();
+            }catch(error){}
+        }
 
-        }catch(error){
+        if(layer.__deleteHandler){
 
-            console.log(
-                'Draw stop:',
-                error
+            layer.off(
+                'click',
+                layer.__deleteHandler
             );
+
+            layer.__deleteHandler=null;
         }
 
-        activeDrawHandler=null;
-    }
+    });
+
 }
 
-function activateDrawHandler(handler){
+/* ================================================= */
+/* STYLE DRAWN LAYER */
+/* ================================================= */
 
-    stopLiveRoute();
+function styleGeomanLayer(layer){
 
-    stopActiveDraw();
+    if(
+        layer instanceof L.Polygon
+    ){
 
-    activeDrawHandler=handler;
+        layer.setStyle({
 
-    handler.enable();
+            color:'#008000',
+
+            weight:3,
+
+            fillColor:'#008000',
+
+            fillOpacity:.25
+
+        });
+
+    }
+
+    else if(
+        layer instanceof L.Polyline
+    ){
+
+        layer.setStyle({
+
+            color:'#0066ff',
+
+            weight:4
+
+        });
+
+    }
+
 }
 
-map.on(
-    L.Draw.Event.DRAWSTOP,
-    function(){
-
-        activeDrawHandler=null;
-    }
-);
-
-map.on(
-    L.Draw.Event.EDITSTOP,
-    function(){
-
-        activeDrawHandler=null;
-    }
-);
-
-map.on(
-    L.Draw.Event.DELETESTOP,
-    function(){
-
-        activeDrawHandler=null;
-    }
-);
-
 /* ================================================= */
-/* CREATED */
+/* DRAW CREATED */
 /* ================================================= */
 
 map.on(
-    L.Draw.Event.CREATED,
+    'pm:create',
     function(event){
-
-        drawnItems.clearLayers();
 
         var layer=event.layer;
 
+        /*
+         * در پروژه فعلی فقط یک عارضه رسم‌شده
+         * نگهداری می‌شود.
+         */
+
+        drawnItems.clearLayers();
+
+        /*
+         * اگر عارضه قبلی در حالت ویرایش بوده
+         * متوقف شود.
+         */
+
+        if(
+            layer.pm &&
+            layer.pm.enabled()
+        ){
+
+            try{
+                layer.pm.disable();
+            }catch(error){}
+
+        }
+
+        styleGeomanLayer(layer);
+
         drawnItems.addLayer(layer);
+
+        geomanDrawActive=false;
+
+        /*
+         * Popup عارضه رسم‌شده
+         */
 
         layer.bindPopup(
             '<div class="kmz-info">'+
@@ -961,8 +1029,304 @@ map.on(
             'برای خروجی KMZ از بخش Add Data استفاده کنید.'+
             '</div>'
         );
+
+        /*
+         * جلوگیری از ایجاد مقصد مسیریابی
+         * هنگام کلیک روی عارضه
+         */
+
+        layer.on(
+            'click',
+            function(e){
+
+                if(
+                    geomanRemovalActive
+                ){
+
+                    L.DomEvent.stopPropagation(e);
+
+                    drawnItems.removeLayer(
+                        layer
+                    );
+
+                    return;
+                }
+
+                L.DomEvent.stopPropagation(e);
+            }
+        );
+
     }
 );
+
+/* ================================================= */
+/* DRAW END */
+/* ================================================= */
+
+map.on(
+    'pm:drawend',
+    function(){
+
+        geomanDrawActive=false;
+
+    }
+);
+
+/* ================================================= */
+/* DRAW MARKER */
+/* ================================================= */
+
+function startDrawMarker(){
+
+    stopLiveRoute();
+
+    stopGeomanModes();
+
+    if(!map.pm){
+
+        alert(
+            'ابزار ترسیم بارگذاری نشده است.'
+        );
+
+        return;
+    }
+
+    geomanDrawActive=true;
+
+    map.pm.enableDraw(
+        'Marker'
+    );
+}
+
+/* ================================================= */
+/* DRAW LINE */
+/* ================================================= */
+
+function startDrawPolyline(){
+
+    stopLiveRoute();
+
+    stopGeomanModes();
+
+    if(!map.pm){
+
+        alert(
+            'ابزار ترسیم بارگذاری نشده است.'
+        );
+
+        return;
+    }
+
+    geomanDrawActive=true;
+
+    map.pm.enableDraw(
+        'Line',
+        {
+
+            snappable:true,
+
+            snapDistance:20,
+
+            allowSelfIntersection:false,
+
+            pathOptions:{
+
+                color:'#0066ff',
+
+                weight:4
+
+            }
+
+        }
+    );
+}
+
+/* ================================================= */
+/* DRAW POLYGON */
+/* ================================================= */
+
+function startDrawPolygon(){
+
+    stopLiveRoute();
+
+    stopGeomanModes();
+
+    if(!map.pm){
+
+        alert(
+            'ابزار ترسیم بارگذاری نشده است.'
+        );
+
+        return;
+    }
+
+    geomanDrawActive=true;
+
+    map.pm.enableDraw(
+        'Polygon',
+        {
+
+            snappable:true,
+
+            snapDistance:20,
+
+            allowSelfIntersection:false,
+
+            pathOptions:{
+
+                color:'#008000',
+
+                weight:3,
+
+                fillColor:'#008000',
+
+                fillOpacity:.25
+
+            }
+
+        }
+    );
+}
+
+/* ================================================= */
+/* EDIT DRAWN FEATURES */
+/* ================================================= */
+
+function editDrawnFeatures(){
+
+    if(
+        drawnItems.getLayers().length===0
+    ){
+
+        alert(
+            'عارضه‌ای برای ویرایش وجود ندارد.'
+        );
+
+        return;
+    }
+
+    stopLiveRoute();
+
+    /*
+     * اگر در حال ویرایش هستیم،
+     * با زدن دوباره ویرایش متوقف شود.
+     */
+
+    if(geomanEditActive){
+
+        stopGeomanModes();
+
+        return;
+    }
+
+    stopGeomanModes();
+
+    geomanEditActive=true;
+
+    drawnItems.eachLayer(
+        function(layer){
+
+            if(
+                layer.pm &&
+                layer.pm.enable
+            ){
+
+                try{
+
+                    layer.pm.enable({
+
+                        snappable:true,
+
+                        snapDistance:20,
+
+                        allowSelfIntersection:false
+
+                    });
+
+                }catch(error){
+
+                    console.log(
+                        'Edit error:',
+                        error
+                    );
+                }
+
+            }
+
+        }
+    );
+}
+
+/* ================================================= */
+/* DELETE SELECTED DRAWN FEATURES */
+/* ================================================= */
+
+function deleteDrawnFeatures(){
+
+    if(
+        drawnItems.getLayers().length===0
+    ){
+
+        alert(
+            'عارضه‌ای برای حذف وجود ندارد.'
+        );
+
+        return;
+    }
+
+    stopLiveRoute();
+
+    /*
+     * اگر حالت حذف فعال است،
+     * با زدن دوباره خاموش شود.
+     */
+
+    if(geomanRemovalActive){
+
+        stopGeomanModes();
+
+        return;
+    }
+
+    stopGeomanModes();
+
+    geomanRemovalActive=true;
+
+    drawnItems.eachLayer(
+        function(layer){
+
+            layer.__deleteHandler=
+                function(e){
+
+                    L.DomEvent.stopPropagation(e);
+
+                    drawnItems.removeLayer(
+                        layer
+                    );
+
+                };
+
+            layer.on(
+                'click',
+                layer.__deleteHandler
+            );
+
+        }
+    );
+
+}
+
+/* ================================================= */
+/* CLEAR DRAWN FEATURES */
+/* ================================================= */
+
+function clearDrawnFeatures(){
+
+    stopGeomanModes();
+
+    drawnItems.clearLayers();
+
+}
 
 /* ================================================= */
 /* XML */
@@ -1452,12 +1816,6 @@ function exportKMZ(){
 function clearKMZ(){
 
     kmzLayer.clearLayers();
-
-}
-
-function clearDrawnFeatures(){
-
-    drawnItems.clearLayers();
 
 }
 
@@ -2343,7 +2701,7 @@ function selectRoutingMode(
     mode
 ){
 
-    stopActiveDraw();
+    stopGeomanModes();
 
     if(!map._userLocation){
 
@@ -2394,7 +2752,16 @@ map.on(
     'click',
     function(e){
 
-        if(activeDrawHandler){
+        /*
+         * اگر در حالت ترسیم، ویرایش یا حذف هستیم،
+         * کلیک نقشه نباید مقصد مسیریابی ایجاد کند.
+         */
+
+        if(
+            geomanDrawActive ||
+            geomanEditActive ||
+            geomanRemovalActive
+        ){
 
             return;
         }
@@ -2943,98 +3310,6 @@ function stopLiveRoute(){
 }
 
 /* ================================================= */
-/* DRAW FUNCTIONS */
-/* ================================================= */
-
-function startDrawMarker(){
-
-    stopLiveRoute();
-
-    activateDrawHandler(
-        new L.Draw.Marker(
-            map,
-            drawControl.options.draw.marker
-        )
-    );
-}
-
-function startDrawPolyline(){
-
-    stopLiveRoute();
-
-    activateDrawHandler(
-        new L.Draw.Polyline(
-            map,
-            drawControl.options.draw.polyline
-        )
-    );
-}
-
-function startDrawPolygon(){
-
-    stopLiveRoute();
-
-    activateDrawHandler(
-        new L.Draw.Polygon(
-            map,
-            drawControl.options.draw.polygon
-        )
-    );
-}
-
-function editDrawnFeatures(){
-
-    if(
-        drawnItems.getLayers().length===0
-    ){
-
-        alert(
-            'عارضه‌ای برای ویرایش وجود ندارد.'
-        );
-
-        return;
-    }
-
-    stopLiveRoute();
-
-    activateDrawHandler(
-        new L.EditToolbar.Edit(
-            map,
-            {
-                featureGroup:
-                    drawnItems
-            }
-        )
-    );
-}
-
-function deleteDrawnFeatures(){
-
-    if(
-        drawnItems.getLayers().length===0
-    ){
-
-        alert(
-            'عارضه‌ای برای حذف وجود ندارد.'
-        );
-
-        return;
-    }
-
-    stopLiveRoute();
-
-    activateDrawHandler(
-        new L.EditToolbar.Delete(
-            map,
-            {
-                featureGroup:
-                    drawnItems
-            }
-        )
-    );
-}
-
-/* ================================================= */
 /* ابزارهای سفارشی بالای نقشه */
 /* ================================================= */
 
@@ -3201,7 +3476,8 @@ rightTools.onAdd=
 
                 '<button id="myLocationTopButton" '+
                 'class="map-top-tool-button">'+
-                '📍 موقعیت من'+
+                '<i class="fas fa-crosshairs"></i> '+
+                'موقعیت من'+
                 '</button>'+
 
                 '<button id="measureTopButton" '+
